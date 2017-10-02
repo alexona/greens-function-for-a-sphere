@@ -1,0 +1,426 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass mwart
+\begin_preamble
+\let\lll\undefined
+
+\usepackage[polish]{babel}
+\usepackage{polski}
+\addto{\captionspolish}{\renewcommand{\abstractname}{}}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language polish
+\language_package babel
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language german
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Implementacja funkcji Greena dla sfery
+\end_layout
+
+\begin_layout Author
+Monika Kubek
+\end_layout
+
+\begin_layout Date
+2 października 2017
+\end_layout
+
+\begin_layout Abstract
+Implementacja funkcji Greena dla sfery na podstawie publikacji 
+\begin_inset Quotes gld
+\end_inset
+
+Green’s function formalism for phononic crystals
+\begin_inset Quotes grd
+\end_inset
+
+ R.
+ Sainidou, N.
+ Stefanou, A.
+ Modinos (Phys.
+ Rev.
+ B 69, 064301).
+ Oznaczenia zostały zachowane według oryginału.
+\end_layout
+
+\begin_layout Standard
+Rozważamy pojedynczą, jednorodną sferę o promieniu 
+\begin_inset Formula $S$
+\end_inset
+
+ i gęstości 
+\begin_inset Formula $\rho_{S}$
+\end_inset
+
+ umieszczoną w centrum układu współrzędnych.
+ Jest ona zanurzona w jednorodnym ośrodku o gęstości 
+\begin_inset Formula $\rho$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Zastosowano układ współrzędnych sferycznych oraz następujące oznaczenia:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathbf{r}$
+\end_inset
+
+ - wektor położenia w przestrzeni,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathbf{q}$
+\end_inset
+
+ - wektor falowy, 
+\begin_inset Formula $q=\omega/c_{\nu}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\omega$
+\end_inset
+
+ - częstość kołowa fali,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $c_{\nu}$
+\end_inset
+
+ - prędkość fali w ośrodku, gdzie 
+\begin_inset Formula $\nu=l,t$
+\end_inset
+
+ kolejno dla fali podłużnej i poprzecznej,
+\end_layout
+
+\begin_layout Itemize
+indeks 
+\begin_inset Formula $\mathrm{L}=Plm$
+\end_inset
+
+ jest zbiorem trzech indeksów, gdzie:
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $P=L,M,N$
+\end_inset
+
+, gdzie 
+\begin_inset Formula $L$
+\end_inset
+
+ to fala podłużna, 
+\begin_inset Formula $M$
+\end_inset
+
+ i 
+\begin_inset Formula $N$
+\end_inset
+
+ to fale poprzeczne kolejno o polaryzacji 
+\begin_inset Formula $p$
+\end_inset
+
+ i 
+\begin_inset Formula $s$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $l$
+\end_inset
+
+ - liczba naturalna,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $m$
+\end_inset
+
+ - liczba naturalna mniejsza lub równa 
+\begin_inset Formula $l$
+\end_inset
+
+,
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset Formula $\Theta$
+\end_inset
+
+ - jest funkcją skokową Heaviside'a,
+\end_layout
+
+\begin_layout Itemize
+indeksy 
+\begin_inset Formula $i,i'=1,2,3$
+\end_inset
+
+ to składowe wektora.
+\end_layout
+
+\begin_layout Description
+Sferyczne
+\begin_inset space ~
+\end_inset
+
+funkcje
+\begin_inset space ~
+\end_inset
+
+własne odpowiadające wartości własnej 
+\begin_inset Formula $c_{\nu}q$
+\end_inset
+
+ oznaczamy 
+\begin_inset Formula $\mathbf{u}_{\mathrm{L}q}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Zbiór podłużnych, sferycznych funkcji własnych odpowiadających wartości
+ własnej 
+\begin_inset Formula $c_{l}q$
+\end_inset
+
+ dany jest jako 
+\begin_inset Formula 
+\begin{equation}
+\sqrt{\rho V}\mathbf{u}_{Llmq}\left(\mathbf{r}\right)=\frac{1}{q}\nabla\left[f_{l}\left(qr\right)Y_{l}^{m}\left(\hat{\mathbf{r}}\right)\right],
+\end{equation}
+
+\end_inset
+
+a zbiór poprzecznych, sferycznych funkcji własnych odpowiadających wartości
+ własnej 
+\begin_inset Formula $c_{t}q$
+\end_inset
+
+ dany jest wzorami
+\begin_inset Formula 
+\begin{gather}
+\sqrt{\rho V}\mathbf{u}_{Mlmq}\left(\mathbf{r}\right)=f_{l}\left(qr\right)\mathbf{X}_{lm}\left(\hat{\mathbf{r}}\right),\\
+\sqrt{\rho V}\mathbf{u}_{Nlmq}\left(\mathbf{r}\right)=\frac{i}{q}\nabla\times\left[f_{l}\left(qr\right)\mathbf{X}_{lm}\left(\hat{\mathbf{r}}\right)\right].
+\end{gather}
+
+\end_inset
+
+W powyższych wzorach 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $Y_{l}^{m}$
+\end_inset
+
+ - to harmoniki sferyczne,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathbf{X}_{lm}$
+\end_inset
+
+ - to wektorowe harmoniki sferyczne,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $f_{l}$
+\end_inset
+
+ - w zależności od rodzaju fali jest to sferyczna funkcja Bessel'a 
+\begin_inset Formula $j_{l}$
+\end_inset
+
+ (dla fali padającej, funkcja własna oznaczona jest wtedy jako 
+\begin_inset Formula $\mathbf{J}_{\mathrm{L}}\left(\mathbf{r}\right)$
+\end_inset
+
+) lub sferyczna funkcja Hankel'a 
+\begin_inset Formula $h_{l}^{+}$
+\end_inset
+
+(dla fali rozproszonej, funkcja własna oznaczona jest wtedy jako 
+\begin_inset Formula $\mathbf{H}_{\mathrm{L}}\left(\mathbf{r}\right)$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Description
+Falę
+\begin_inset space ~
+\end_inset
+
+płaską rozwijamy jako 
+\begin_inset Formula $\mathbf{u}_{p\mathbf{q}}\left(\mathbf{r}\right)=\sum_{\mathrm{L}}a_{\mathrm{L}}^{p\mathbf{\hat{q}}}\mathbf{u}_{\mathrm{L}}^{0}\left(\mathbf{r}\right)$
+\end_inset
+
+ co jest sumą powyższych fal kulistych z pewnymi współczynnikami 
+\begin_inset Formula $a_{\mathrm{L}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+Fala
+\begin_inset space ~
+\end_inset
+
+padająca zostaje rozwinięta w falę sferyczną i ma formę 
+\begin_inset Formula $\sum_{\mathrm{L}}a_{\mathrm{L}}^{I}\mathbf{J}_{\mathrm{L}}^{S}\left(\mathbf{r}\right)$
+\end_inset
+
+ wewnątrz sfery oraz 
+\begin_inset Formula $\sum_{\mathrm{L}}\left[a_{\mathrm{L}}^{0}\mathbf{J}_{\mathrm{L}}\left(\mathbf{r}\right)+a_{\mathrm{L}}^{+}\mathbf{H}_{\mathrm{L}}\left(\mathbf{r}\right)\right]$
+\end_inset
+
+ na zewnątrz (jako suma padającej i rozproszonej).
+ Z założenia ciągłości na granicy otrzymujemy układ równań liniowych
+\begin_inset Formula 
+\begin{gather}
+a_{\mathrm{L}}^{+}=\sum_{\mathrm{L'}}T_{\mathrm{LL'}}a_{\mathrm{L}'}^{0},\\
+a_{\mathrm{L}}^{I}=\sum_{\mathrm{L'}}C_{\mathrm{LL'}}a_{\mathrm{L'}}^{0}
+\end{gather}
+
+\end_inset
+
+<jeszcze raz, bo źle> W rozdziale Appendix A pracy źródłowej mamy układ
+ równań liniowych
+\begin_inset Formula 
+\begin{align*}
+\mathbb{M}_{4x4}\mathbb{A}_{4x1}=\mathbb{E}_{4x1}, & \ \left(\mathrm{A1}\right)\\
+\mathbb{N}_{2x2}\mathbb{B}_{2x1}=\mathbb{F}_{2x1}, & \ \left(\mathrm{A2}\right)
+\end{align*}
+
+\end_inset
+
+skąd otrzymujemy, że
+\begin_inset Formula 
+\[
+\]
+
+\end_inset
+
+Funkcja padająca ostatecznie ma postać
+\begin_inset Formula 
+\begin{multline}
+\mathbf{R}_{\mathrm{L}}\left(\mathbf{r}\right)=\left[\mathbf{J}_{\mathrm{L}}\left(\mathbf{r}\right)+\sum_{\mathrm{L'}}T_{\mathrm{L'L}}\mathbf{H}_{\mathrm{L'}}\left(\mathbf{r}\right)\right]\Theta\left(r-S\right)\\
++\sqrt{\rho_{S}/\rho}\sum_{\mathrm{L'}}C_{\mathrm{L'L}}\mathbf{J}_{\mathrm{L'}}^{S}\left(\mathbf{r}\right)\Theta\left(S-r\right).\label{eq:funkcja-padajaca}
+\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+Funkcja
+\begin_inset space ~
+\end_inset
+
+Greena dla sfery, którą implementujemy, ma postać
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+G_{ii'}^{\left(s\right)}\left(\mathbf{r,r'}\right)=-i\sum_{\mathrm{L}}\frac{\omega}{c_{\nu}^{3}}\left[R_{\mathrm{L};i}\left(\mathbf{r}\right)\bar{I}_{\mathrm{L};i'}\left(\mathbf{r'}\right)\Theta\left(r'-r\right)+I_{\mathrm{L};i}\left(\mathbf{r}\right)\bar{R}_{\mathrm{L};i'}\left(\mathbf{r'}\right)\Theta\left(r-r'\right)\right].\label{eq:funkcja-greena}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
