@@ -13,6 +13,9 @@
 \addto{\captionspolish}{\renewcommand{\abstractname}{}}
 \end_preamble
 \use_default_options true
+\begin_modules
+enumitem
+\end_modules
 \maintain_unincluded_children false
 \language polish
 \language_package babel
@@ -87,7 +90,7 @@ Monika Kubek
 \end_layout
 
 \begin_layout Date
-2 października 2017
+3 października 2017
 \end_layout
 
 \begin_layout Abstract
@@ -246,7 +249,16 @@ indeksy
  to składowe wektora.
 \end_layout
 
-\begin_layout Description
+\begin_layout Standard
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
 Sferyczne
 \begin_inset space ~
 \end_inset
@@ -255,7 +267,9 @@ funkcje
 \begin_inset space ~
 \end_inset
 
-własne odpowiadające wartości własnej 
+własne
+\series default
+ odpowiadające wartości własnej 
 \begin_inset Formula $c_{\nu}q$
 \end_inset
 
@@ -264,11 +278,7 @@ własne odpowiadające wartości własnej
 \end_inset
 
 .
- 
-\end_layout
-
-\begin_layout Standard
-Zbiór podłużnych, sferycznych funkcji własnych odpowiadających wartości
+ Zbiór podłużnych, sferycznych funkcji własnych odpowiadających wartości
  własnej 
 \begin_inset Formula $c_{l}q$
 \end_inset
@@ -295,7 +305,15 @@ a zbiór poprzecznych, sferycznych funkcji własnych odpowiadających wartości
 
 \end_inset
 
-W powyższych wzorach 
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace medskip
+\end_inset
+
+W powyższych wzorach:
 \end_layout
 
 \begin_layout Itemize
@@ -335,12 +353,23 @@ W powyższych wzorach
 ).
 \end_layout
 
-\begin_layout Description
+\begin_layout Standard
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
 Falę
 \begin_inset space ~
 \end_inset
 
-płaską rozwijamy jako 
+płaską
+\series default
+ rozwijamy jako 
 \begin_inset Formula $\mathbf{u}_{p\mathbf{q}}\left(\mathbf{r}\right)=\sum_{\mathrm{L}}a_{\mathrm{L}}^{p\mathbf{\hat{q}}}\mathbf{u}_{\mathrm{L}}^{0}\left(\mathbf{r}\right)$
 \end_inset
 
@@ -351,12 +380,23 @@ płaską rozwijamy jako
 .
 \end_layout
 
-\begin_layout Description
+\begin_layout Standard
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
 Fala
 \begin_inset space ~
 \end_inset
 
-padająca zostaje rozwinięta w falę sferyczną i ma formę 
+padająca
+\series default
+ zostaje rozwinięta w falę sferyczną i ma formę 
 \begin_inset Formula $\sum_{\mathrm{L}}a_{\mathrm{L}}^{I}\mathbf{J}_{\mathrm{L}}^{S}\left(\mathbf{r}\right)$
 \end_inset
 
@@ -368,34 +408,86 @@ padająca zostaje rozwinięta w falę sferyczną i ma formę
  Z założenia ciągłości na granicy otrzymujemy układ równań liniowych
 \begin_inset Formula 
 \begin{gather}
-a_{\mathrm{L}}^{+}=\sum_{\mathrm{L'}}T_{\mathrm{LL'}}a_{\mathrm{L}'}^{0},\\
-a_{\mathrm{L}}^{I}=\sum_{\mathrm{L'}}C_{\mathrm{LL'}}a_{\mathrm{L'}}^{0}
+a_{\mathrm{L}}^{+}=\sum_{\mathrm{L'}}T_{\mathrm{LL'}}a_{\mathrm{L}'}^{0},\label{eq:macierz-T}\\
+a_{\mathrm{L}}^{I}=\sum_{\mathrm{L'}}C_{\mathrm{LL'}}a_{\mathrm{L'}}^{0}\label{eq:macierz-C}
 \end{gather}
 
 \end_inset
 
-<jeszcze raz, bo źle> W rozdziale Appendix A pracy źródłowej mamy układ
- równań liniowych
+W rozdziale Appendix A pracy źródłowej mamy układ równań 
 \begin_inset Formula 
 \begin{align*}
-\mathbb{M}_{4x4}\mathbb{A}_{4x1}=\mathbb{E}_{4x1}, & \ \left(\mathrm{A1}\right)\\
-\mathbb{N}_{2x2}\mathbb{B}_{2x1}=\mathbb{F}_{2x1}, & \ \left(\mathrm{A2}\right)
+\boldsymbol{M}_{4x4}\begin{pmatrix}a_{Nlm}^{+}\\
+a_{Llm}^{+}\\
+a_{Nlm}^{I}\\
+a_{Llm}^{I}
+\end{pmatrix}=\boldsymbol{N}_{4x2}\begin{pmatrix}a_{Nlm}^{0}\\
+a_{Llm}^{0}
+\end{pmatrix}, & \ \left(\mathrm{A1}\right)\\
+\boldsymbol{K}_{2x2}\begin{pmatrix}a_{Mlm}^{+}\\
+a_{Mlm}^{I}
+\end{pmatrix}=a_{Mlm}^{0}\boldsymbol{L}_{2x1}, & \ \left(\mathrm{A2}\right)
 \end{align*}
 
 \end_inset
 
 skąd otrzymujemy, że
 \begin_inset Formula 
-\[
-\]
+\begin{equation}
+\begin{pmatrix}a_{Nlm}^{+}\\
+a_{Llm}^{+}\\
+a_{Nlm}^{I}\\
+a_{Llm}^{I}\\
+a_{Mlm}^{+}\\
+a_{Mlm}^{I}
+\end{pmatrix}=\left(\begin{array}{c|c}
+\boldsymbol{M}^{-1}\boldsymbol{N} & \begin{array}{c}
+\\
+\\
+\\
+\\
+\end{array}\\
+\hline \begin{array}{cc}
+\\
+\\
+\end{array} & \boldsymbol{K}^{-1}\boldsymbol{L}
+\end{array}\right)\begin{pmatrix}a_{Nlm}^{0}\\
+a_{Llm}^{0}\\
+a_{Mlm}^{0}
+\end{pmatrix},
+\end{equation}
 
 \end_inset
 
-Funkcja padająca ostatecznie ma postać
+a z uzyskanej macierzy blokowej dostaniemy odpowiednie wartości macierzy
+ 
+\begin_inset Formula $\boldsymbol{T}$
+\end_inset
+
+ i 
+\begin_inset Formula $\boldsymbol{C}$
+\end_inset
+
+ z (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:macierz-T"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:macierz-C"
+
+\end_inset
+
+).
+ Funkcja padająca ostatecznie ma postać
 \begin_inset Formula 
 \begin{multline}
 \mathbf{R}_{\mathrm{L}}\left(\mathbf{r}\right)=\left[\mathbf{J}_{\mathrm{L}}\left(\mathbf{r}\right)+\sum_{\mathrm{L'}}T_{\mathrm{L'L}}\mathbf{H}_{\mathrm{L'}}\left(\mathbf{r}\right)\right]\Theta\left(r-S\right)\\
-+\sqrt{\rho_{S}/\rho}\sum_{\mathrm{L'}}C_{\mathrm{L'L}}\mathbf{J}_{\mathrm{L'}}^{S}\left(\mathbf{r}\right)\Theta\left(S-r\right).\label{eq:funkcja-padajaca}
++\sqrt{\rho_{S}/\rho}\,\sum_{\mathrm{L'}}C_{\mathrm{L'L}}\mathbf{J}_{\mathrm{L'}}^{S}\left(\mathbf{r}\right)\Theta\left(S-r\right).\label{eq:funkcja-padajaca}
 \end{multline}
 
 \end_inset
@@ -403,19 +495,150 @@ Funkcja padająca ostatecznie ma postać
 
 \end_layout
 
-\begin_layout Description
+\begin_layout Standard
+\begin_inset VSpace 2cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Fala
+\begin_inset space ~
+\end_inset
+
+rozproszona
+\series default
+ zostaje rozwinięta w falę sferyczną i ma wewnątrz sfery formę 
+\begin_inset Formula $\sum_{\mathrm{L}}\left[c_{\mathrm{L}}^{I}\mathbf{J}_{\mathrm{L}}^{S}\left(\mathbf{r}\right)+c_{\mathrm{L}}^{I+}\mathbf{H}_{\mathrm{L}}^{S}\left(\mathbf{r}\right)\right]$
+\end_inset
+
+ (jako suma padającej i rozproszonej) oraz 
+\begin_inset Formula $\sum_{\mathrm{L}}c_{\mathrm{L}}^{0}\mathbf{H}_{\mathrm{L}}\left(\mathbf{r}\right)$
+\end_inset
+
+ na zewnątrz.
+ Z założenia ciągłości na granicy otrzymujemy układ równań liniowych
+\begin_inset Formula 
+\begin{gather}
+c_{\mathrm{L}}^{I+}=\sum_{\mathrm{L'}}Q_{\mathrm{LL'}}c_{\mathrm{L}'}^{0},\label{eq:macierz-Q}\\
+c_{\mathrm{L}}^{I}=\sum_{\mathrm{L'}}P_{\mathrm{LL'}}c_{\mathrm{L'}}^{0}\label{eq:macierz-P}
+\end{gather}
+
+\end_inset
+
+W rozdziale Appendix A pracy źródłowej mamy układ równań 
+\begin_inset Formula 
+\begin{align*}
+\boldsymbol{M^{'}}_{4x4}\begin{pmatrix}c_{Nlm}^{I+}\\
+c_{Llm}^{I+}\\
+c_{Nlm}^{I}\\
+c_{Llm}^{I}
+\end{pmatrix}=\boldsymbol{N^{'}}_{4x2}\begin{pmatrix}c_{Nlm}^{0}\\
+c_{Llm}^{0}
+\end{pmatrix}, & \ \left(\mathrm{A5}\right)\\
+\boldsymbol{K^{'}}_{2x2}\begin{pmatrix}a_{Mlm}^{I+}\\
+a_{Mlm}^{I}
+\end{pmatrix}=c_{Mlm}^{0}\boldsymbol{L^{'}}_{2x1}, & \ \left(\mathrm{A6}\right)
+\end{align*}
+
+\end_inset
+
+skąd analogicznie jak wcześniej otrzymujemy
+\begin_inset Formula 
+\begin{equation}
+\begin{pmatrix}c_{Nlm}^{I+}\\
+c_{Llm}^{I+}\\
+c_{Nlm}^{I}\\
+c_{Llm}^{I}\\
+a_{Mlm}^{I+}\\
+a_{Mlm}^{I}
+\end{pmatrix}=\left(\begin{array}{c|c}
+\boldsymbol{M^{'}}^{-1}\boldsymbol{N^{'}} & \begin{array}{c}
+\\
+\\
+\\
+\\
+\end{array}\\
+\hline \begin{array}{cc}
+\\
+\\
+\end{array} & \boldsymbol{K^{'}}^{-1}\boldsymbol{L^{'}}
+\end{array}\right)\begin{pmatrix}c_{Nlm}^{0}\\
+c_{Llm}^{0}\\
+c_{Mlm}^{0}
+\end{pmatrix},
+\end{equation}
+
+\end_inset
+
+a z uzyskanej macierzy blokowej dostaniemy odpowiednie wartości macierzy
+ 
+\begin_inset Formula $\boldsymbol{Q}$
+\end_inset
+
+ i 
+\begin_inset Formula $\boldsymbol{P}$
+\end_inset
+
+ z (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:macierz-Q"
+
+\end_inset
+
+,
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:macierz-P"
+
+\end_inset
+
+).
+ Funkcja padająca ostatecznie ma postać
+\begin_inset Formula 
+\begin{multline}
+\mathbf{I}_{\mathrm{L}}\left(\mathbf{r}\right)=\mathbf{H}_{\mathrm{L}}\left(\mathbf{r}\right)\Theta\left(r-S\right)+\sqrt{\rho_{S}/\rho}\,\sum_{\mathrm{L}}\left[P_{\mathrm{LL'}}\mathbf{J}_{\mathrm{L'}}^{S}\left(\mathbf{r}\right)\right.\\
+\left.+Q_{\mathrm{L'L}}\mathbf{H}_{\mathrm{L'}}^{S}\left(\mathbf{r}\right)\right]\Theta\left(S-r\right).\label{eq:funkcja-padajaca-1}
+\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
 Funkcja
 \begin_inset space ~
 \end_inset
 
-Greena dla sfery, którą implementujemy, ma postać
+Greena
+\series default
+ dla sfery, którą implementujemy, ma postać
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-G_{ii'}^{\left(s\right)}\left(\mathbf{r,r'}\right)=-i\sum_{\mathrm{L}}\frac{\omega}{c_{\nu}^{3}}\left[R_{\mathrm{L};i}\left(\mathbf{r}\right)\bar{I}_{\mathrm{L};i'}\left(\mathbf{r'}\right)\Theta\left(r'-r\right)+I_{\mathrm{L};i}\left(\mathbf{r}\right)\bar{R}_{\mathrm{L};i'}\left(\mathbf{r'}\right)\Theta\left(r-r'\right)\right].\label{eq:funkcja-greena}
-\end{equation}
+\begin{multline}
+G_{ii'}^{\left(s\right)}\left(\mathbf{r,r'}\right)=-i\sum_{\mathrm{L}}\frac{\omega}{c_{\nu}^{3}}\left[R_{\mathrm{L};i}\left(\mathbf{r}\right)\bar{I}_{\mathrm{L};i'}\left(\mathbf{r'}\right)\Theta\left(r'-r\right)\right.\\
+\left.+I_{\mathrm{L};i}\left(\mathbf{r}\right)\bar{R}_{\mathrm{L};i'}\left(\mathbf{r'}\right)\Theta\left(r-r'\right)\right],\label{eq:funkcja-greena}
+\end{multline}
+
+\end_inset
+
+gdzie 
+\begin_inset Formula 
+\[
+\mathbf{\bar{u}}_{Plm}\left(\mathbf{r}\right)=\left(-1\right)^{f}\mathbf{u}_{Pl-m}\left(\mathbf{r}\right)\ \mathrm{dla}\ \begin{cases}
+f=m & \mathrm{gdy\ }P=L,N\\
+f=m+1 & \mathrm{gdy\ }P=M
+\end{cases}.
+\]
 
 \end_inset
 
