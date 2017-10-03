@@ -483,7 +483,7 @@ reference "eq:macierz-C"
 \end_inset
 
 ).
- Funkcja padająca ostatecznie ma postać
+ Funkcja dla fali regularnej ostatecznie ma postać
 \begin_inset Formula 
 \begin{multline}
 \mathbf{R}_{\mathrm{L}}\left(\mathbf{r}\right)=\left[\mathbf{J}_{\mathrm{L}}\left(\mathbf{r}\right)+\sum_{\mathrm{L'}}T_{\mathrm{L'L}}\mathbf{H}_{\mathrm{L'}}\left(\mathbf{r}\right)\right]\Theta\left(r-S\right)\\
@@ -598,7 +598,7 @@ reference "eq:macierz-P"
 \end_inset
 
 ).
- Funkcja padająca ostatecznie ma postać
+ Funkcja dla fali nieregularnej ostatecznie ma postać
 \begin_inset Formula 
 \begin{multline}
 \mathbf{I}_{\mathrm{L}}\left(\mathbf{r}\right)=\mathbf{H}_{\mathrm{L}}\left(\mathbf{r}\right)\Theta\left(r-S\right)+\sqrt{\rho_{S}/\rho}\,\sum_{\mathrm{L}}\left[P_{\mathrm{LL'}}\mathbf{J}_{\mathrm{L'}}^{S}\left(\mathbf{r}\right)\right.\\
@@ -643,6 +643,30 @@ f=m+1 & \mathrm{gdy\ }P=M
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section*
+Pytania
+\end_layout
+
+\begin_layout Enumerate
+Czym są wektory 
+\begin_inset Formula $\mathbf{r}$
+\end_inset
+
+ i 
+\begin_inset Formula $\mathbf{r'}$
+\end_inset
+
+?
+\end_layout
+
+\begin_layout Enumerate
+Czym jest plus przy sferycznej funkcji Bessel'a 
+\begin_inset Formula $h_{l}^{+}$
+\end_inset
+
+?
 \end_layout
 
 \end_body
