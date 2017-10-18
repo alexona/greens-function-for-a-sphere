@@ -8,21 +8,23 @@ Created on Tue Oct 10 09:58:01 2017
 
 import matplotlib.pyplot as plt
 import numpy as np
-from greenfuncsphere import *
+from mathtools import sph_harm, sph_harm_diff_phi, sph_harm_diff_theta
 
 
-m = 3
+m = 1
 n = m - 0
 
 theta = np.linspace(0, 2 * np.pi, 360)
 phi   = np.linspace(0,     np.pi, 180)
 
-#theta, phi = np.meshgrid(theta, phi)
 
 x, y = np.meshgrid(theta, phi)
 
-sph_real = np.real(sph_harm_diff_phi(n, m, x, y))
-sph_imag = np.imag(sph_harm_diff_phi(n, m, x, y))
+#sph_real = np.real(sph_harm_diff_phi(n, m, x, y))
+#sph_imag = np.imag(sph_harm_diff_phi(n, m, x, y))
+# LUB
+sph_real = np.real(sph_harm(n, m, x, y))
+sph_imag = np.imag(sph_harm(n, m, x, y))
 
 fig = plt.figure(figsize=(8, 4))
 
@@ -41,8 +43,8 @@ fig.colorbar(pos1, ax=ax1)
 fig.colorbar(pos2, ax=ax2)
 
 plt.show()
-
 # =============================================================================
+#
 # sph_real = np.real(sph_harm(n, m, theta, phi))
 # sph_imag = np.imag(sph_harm(n, m, theta, phi))
 #
@@ -56,16 +58,5 @@ plt.show()
 # fig.colorbar(pos2, ax=ax2)
 #
 # plt.show()
-# =============================================================================
-# =============================================================================
 #
-# sph = np.abs(sph_harm(n, m, theta, phi)) ** 2
-# print(sph)
-# fig = plt.figure(figsize=(8, 8))
-# ax = fig.add_subplot(111)
-# pos = ax.imshow(sph)
-#
-# fig.colorbar(pos, ax=ax)
-#
-# plt.show()
 # =============================================================================

@@ -64,8 +64,8 @@ enumitem
 \shortcut idx
 \color #008000
 \end_index
-\secnumdepth 3
-\tocdepth 3
+\secnumdepth 2
+\tocdepth 2
 \paragraph_separation indent
 \paragraph_indentation default
 \quotes_language german
@@ -109,6 +109,10 @@ Green’s function formalism for phononic crystals
  Rev.
  B 69, 064301).
  Oznaczenia zostały zachowane według oryginału.
+\end_layout
+
+\begin_layout Part*
+Implementacja
 \end_layout
 
 \begin_layout Standard
@@ -351,6 +355,77 @@ W powyższych wzorach:
 \end_inset
 
 ).
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Wektorowe
+\begin_inset space ~
+\end_inset
+
+harmoniki
+\begin_inset space ~
+\end_inset
+
+sferyczne
+\begin_inset space ~
+\end_inset
+
+(VSH3)
+\series default
+ 
+\begin_inset Formula $\mathbf{X}_{lm}\left(\hat{\mathbf{r}}\right)$
+\end_inset
+
+ są zdefiniowane w następujący sposób
+\begin_inset Formula 
+\begin{equation}
+\sqrt{l\left(l+1\right)}\,\mathbf{X}_{lm}\left(\hat{\mathbf{r}}\right)=-i\mathbf{r}\times\nabla Y_{l}^{m}\left(\hat{\mathbf{r}}\right),
+\end{equation}
+
+\end_inset
+
+a dokładne wyrażenia podają wzory (39-40) w pracy źródłowej.
+ Spełniają one poniższą własność
+\begin_inset Formula 
+\begin{equation}
+\mathbf{X}_{l-m}=\left(-1\right)^{m}\mathbf{X}_{lm}^{*},
+\end{equation}
+
+\end_inset
+
+oraz dla pola multipolowego
+\begin_inset Formula 
+\begin{gather}
+i\nabla\cdot\left(f\left(r\right)\mathbf{X}_{lm}\right)=0,\\
+i\nabla\times\left(f\left(r\right)\mathbf{X}_{lm}\right)=-\frac{l\left(l+1\right)}{r}f\mathbf{Y}_{lm}-\left(\frac{df}{dr}+\frac{1}{r}f\right)\mathbf{\Psi}_{lm},\label{eq:multi2}
+\end{gather}
+
+\end_inset
+
+gdzie:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathbf{Y}_{lm}=Y_{lm}\mathbf{\hat{r}}$
+\end_inset
+
+ (VSH1),
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathbf{\Psi}_{lm}=r\nabla Y_{lm}$
+\end_inset
+
+ (VSH2).
 \end_layout
 
 \begin_layout Standard
@@ -611,6 +686,56 @@ reference "eq:macierz-P"
 \end_layout
 
 \begin_layout Standard
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Wyrazy
+\begin_inset space ~
+\end_inset
+
+macierzy
+\begin_inset space ~
+\end_inset
+
+M,
+\begin_inset space ~
+\end_inset
+
+N,
+\begin_inset space ~
+\end_inset
+
+K,
+\begin_inset space ~
+\end_inset
+
+L
+\series default
+ są zdefiniowane w Appendix A za pomocą wzorów (A3-4) i (A7-8), gdzie 
+\begin_inset Formula $z_{\nu}=\omega S/c_{\nu}$
+\end_inset
+
+, 
+\begin_inset Formula $x_{\nu}=\omega S/c_{s\nu}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 
 \series bold
 Funkcja
@@ -646,27 +771,38 @@ f=m+1 & \mathrm{gdy\ }P=M
 \end_layout
 
 \begin_layout Section*
+Wzory pomocnicze
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{gather}
+\nabla\left(fg\right)=f\left(\nabla g\right)+g\left(\nabla f\right)\\
+\nabla\times\left(f\mathbf{A}\right)=f\left(\nabla\times\mathbf{A}\right)-\mathbf{A}\times\left(\nabla f\right)
+\end{gather}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
 Pytania
 \end_layout
 
 \begin_layout Enumerate
-Czym są wektory 
-\begin_inset Formula $\mathbf{r}$
-\end_inset
-
- i 
-\begin_inset Formula $\mathbf{r'}$
-\end_inset
-
-?
+wektorowe harmoniki sferyczne
 \end_layout
 
 \begin_layout Enumerate
-Czym jest plus przy sferycznej funkcji Bessel'a 
-\begin_inset Formula $h_{l}^{+}$
+pochodna w 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:multi2"
+
 \end_inset
 
-?
+
 \end_layout
 
 \end_body
