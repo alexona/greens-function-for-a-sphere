@@ -308,7 +308,7 @@ wL3 = lambda l, zl: zl * spherical_hn(l, zl, derivative=True) \
 wL4 = lambda l, zl, zt: (l * (l + 1) - zt**2 / 2) * spherical_hn(l, zl) \
                     - 2 * zl * spherical_hn(l, zl, derivative=True)
 
-def matrix_M(l, omega, S, cn, csn, rhos, rho):
+def matrix_M1(l, omega, S, cn, csn, rhos, rho):
     """
     Creates the M matrix
 
@@ -333,21 +333,17 @@ def matrix_M(l, omega, S, cn, csn, rhos, rho):
     xt = omega * S / csn['t']
     col1 = np.array((d11(l, zt), d21(l, zt), d31(l, zt), d41(l, zt))) / zt
     col2 = -sqrt * np.array((d12(l, zl), d22(l, zl), d32(l, zl), d42(l, zl))) / zl
-    col3 = - np.array(
-                      (d13(l, xt), d23(l, xt),
+    col3 = - np.array((d13(l, xt), d23(l, xt),
                        d33(l, xt, zt, rhos, rho),
-                       d43(l, xt, zt, rhos, rho))
-                     ) / xt
-    col4 = sqrt * np.array(
-                           (d14(l, xl), d24(l, xl),
+                       d43(l, xt, zt, rhos, rho))) / xt
+    col4 = sqrt * np.array((d14(l, xl), d24(l, xl),
                             d34(l, xl, xt, zt, rhos, rho),
-                            d44(l, xl, xt, zt, rhos, rho))
-                          ) / xl
+                            d44(l, xl, xt, zt, rhos, rho))) / xl
     M = np.array((col1, col2, col3, col4))
     return M.T
 
 
-def matrix_N(l, omega, S, cn):
+def matrix_N1(l, omega, S, cn):
     """
     Creates the N matrix
 
@@ -365,12 +361,13 @@ def matrix_N(l, omega, S, cn):
     zl = omega * S / cn['l']
     zt = omega * S / cn['t']
     col1 = - np.array((dN1(l, zt), dN2(l, zt), dN3(l, zt), dN4(l, zt))) / zt
-    col2 = sqrt * np.array((dL1(l, zt), dL2(l, zl), dL3(l, zl), dL4(l, zt, zl))) / zl
+    col2 = sqrt * np.array((dL1(l, zt), dL2(l, zl),
+                            dL3(l, zl), dL4(l, zt, zl))) / zl
     N = np.array((col1, col2))
     return N.T
 
 
-def matrix_K(l, omega, S, cn, csn, rhos, rho):
+def matrix_K1(l, omega, S, cn, csn, rhos, rho):
     """
     Creates the K matrix
 
@@ -395,7 +392,7 @@ def matrix_K(l, omega, S, cn, csn, rhos, rho):
     return np.array((row1, row2))
 
 
-def matrix_L(l, omega, S, cn):
+def matrix_L1(l, omega, S, cn):
     """
     Creates the L matrix
 
@@ -412,6 +409,173 @@ def matrix_L(l, omega, S, cn):
     zt = omega * S / cn['t']
     L = np.array((dN2(l, zt), dN4(l, zt)))
     return L.T
+
+
+def matrix_M2(l, omega, S, cn, csn, rhos, rho):
+    """
+    Creates the M matrix
+
+    Parameters:
+        l       -   order
+        omega   -   wave anguelar frequency
+        S       -   radius of the sphere
+        cn      -   a dictionary with velocity values outside the sphere
+                    {'l': value, 't': value}
+        csn     -   a dictionary with velocity values inside the sphere
+                    {'l': value, 't': value}
+        rhos    -   sphere density
+        rho     -   host medium density
+
+    Returns:
+        ndarray matrix_M
+    """
+    sqrt = np.sqrt(l * (l + 1))
+    zt = omega * S / cn['t']
+    xl = omega * S / csn['l']
+    xt = omega * S / csn['t']
+    col1 = np.array((w11(l, xt), w21(l, xt), w31(l, xt, zt, rhos, rho),
+                     w41(l, xt, zt, rhos, rho))) / xt
+    col2 = -sqrt * np.array((w12(l, xl), w22(l, xl),
+                             w32(l, xl, xt, zt, rhos, rho),
+                             w42(l, xl, zt, zt, rhos, rho))) / xl
+    col3 = - np.array((d13(l, xt), d23(l, xt),
+                       d33(l, xt, zt, rhos, rho),
+                       d43(l, xt, zt, rhos, rho))) / xt
+    col4 = sqrt * np.array((d14(l, xl), d24(l, xl),
+                            d34(l, xl, xt, zt, rhos, rho),
+                            d44(l, xl, xt, zt, rhos, rho))) / xl
+    M = np.array((col1, col2, col3, col4))
+    return M.T
+
+
+def matrix_N2(l, omega, S, cn):
+    """
+    Creates the N matrix
+
+    Parameters:
+        l       -   order
+        omega   -   wave angular frequency
+        S       -   radius of the sphere
+        cn      -   a dictionary with velocity values outside the sphere
+                    {'l': value, 't': value}
+
+    Returns:
+        ndarray matrix_N
+    """
+    sqrt = np.sqrt(l * (l + 1))
+    zl = omega * S / cn['l']
+    zt = omega * S / cn['t']
+    col1 = - np.array((wN1(l, zt), wN2(l, zt), wN3(l, zt), wN4(l, zt))) / zt
+    col2 = sqrt * np.array((wL1(l, zt), wL2(l, zl),
+                            wL3(l, zl), wL4(l, zl, zt))) / zl
+    N = np.array((col1, col2))
+    return N.T
+
+
+def matrix_K2(l, omega, S, cn, csn, rhos, rho):
+    """
+    Creates the K matrix
+
+    Parameters:
+        l       -   order
+        omega   -   wave angular frequency
+        S       -   radius of the sphere
+        cn      -   a dictionary with velocity values outside the sphere
+                    {'l': value, 't': value}
+        csn     -   a dictionary with velocity values inside the sphere
+                    {'l': value, 't': value}
+        rhos    -   sphere density
+        rho     -   host medium density
+
+    Returns:
+        ndarray matrix_K
+    """
+    zt = omega * S / cn['t']
+    xt = omega * S / csn['t']
+    row1 = np.array((- w21(l, xt), d23(l, xt)))
+    row2 = np.array((- w41(l, xt, zt, rhos, rho), d43(l, xt, zt, rhos, rho)))
+    return np.array((row1, row2))
+
+
+def matrix_L2(l, omega, S, cn):
+    """
+    Creates the L matrix
+
+    Parameters:
+        l       -   order
+        omega   -   wave angular frequency
+        S       -   radius of the sphere
+        cn      -   a dictionary with velocity values outside the sphere
+                    {'l': value, 't': value}
+
+    Returns:
+        ndarray matrix_L
+    """
+    zt = omega * S / cn['t']
+    L = np.array(wN2(l, zt), wN4(l, zt))
+    return L.T
+
+
+def matrices_TC(l, omega, S, cn, csn, rhos, rho):
+    """
+    Creates the T and C matrices
+
+    Parameters:
+        l       -   order
+        omega   -   wave anguelar frequency
+        S       -   radius of the sphere
+        cn      -   a dictionary with velocity values outside the sphere
+                    {'l': value, 't': value}
+        csn     -   a dictionary with velocity values inside the sphere
+                    {'l': value, 't': value}
+        rhos    -   sphere density
+        rho     -   host medium density
+
+    Returns:
+        tuple of ndarrays (matrix_T, matrix_C)
+    """
+    MN = np.linalg.inv(matrix_M1(l, omega, S, cn, csn, rhos, rho))\
+        * matrix_N1(l, omega, S, cn)
+    KL = np.linalg.inv(matrix_K1(l, omega, S, cn, csn, rhos, rho))\
+        * matrix_L1(l, omega, S, cn)
+    T = np.zeros((3,3))
+    C = np.zeros((3,3))
+    T[:2,:2] = MN[:2]
+    T[ 3, 3] = KL[0]
+    C[:2,:2] = MN[2:]
+    C[ 3, 3] = KL[1]
+    return T, C
+
+
+def matrices_QP(l, omega, S, cn, csn, rhos, rho):
+    """
+    Creates the Q and P matrices
+
+    Parameters:
+        l       -   order
+        omega   -   wave anguelar frequency
+        S       -   radius of the sphere
+        cn      -   a dictionary with velocity values outside the sphere
+                    {'l': value, 't': value}
+        csn     -   a dictionary with velocity values inside the sphere
+                    {'l': value, 't': value}
+        rhos    -   sphere density
+        rho     -   host medium density
+
+    Returns:
+        tuple of ndarrays (matrix_Q, matrix_P)
+    """
+    MN = np.linalg.inv(matrix_M2(l, omega, S, cn, csn, rhos, rho))\
+        * matrix_N2(l, omega, S, cn)
+    KL = np.linalg.inv(matrix_K2(l, omega, S, cn, csn, rhos, rho))\
+        * matrix_L2(l, omega, S, cn)
+    Q = np.zeros((3,3))
+    P = np.zeros((3,3))
+    Q[:2,:2] = MN[:2]
+    Q[ 3, 3] = KL[0]
+    P[:2,:2] = MN[2:]
+    P[ 3, 3] = KL[1]
+    return Q, P
 
 
 class Vector3D():
@@ -506,6 +670,15 @@ class Vector3D():
         except (RuntimeWarning, ZeroDivisionError):
             phi = 0
         return phi
+
+
+class TransformationMatrix():
+    """
+    Matrix used to transform plane wave into spherical.
+    Dimensions: 3l x 3l
+    """
+    def __init__(self, l, omega, S, cn, csn, rhos, rho):
+        pass
 
 
 class Wave():
