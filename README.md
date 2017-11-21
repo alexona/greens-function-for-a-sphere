@@ -1,3 +1,3 @@
-# funkcje-greena-matlab
+# greens-function-for-a-sphere
 
-Implementacja funkcji Greena dla sfery w Matlabie
+Implementation of a Green's function for a sphere.
