@@ -52,7 +52,7 @@ def spherical_hn(l, r, derivative=False):
 
 def spherical_gradient(l, r, sph_func):
     """
-    Calculate a gradient of chosen spherical function (_jn, _yn, _hn).
+    Calculate a gradient of a chosen spherical function (_jn, _yn, _hn).
 
     Parameters:
         l        -   natural number
@@ -614,7 +614,7 @@ class Vector3D():
     @cart.setter
     def cart(self, cart_coor):
         self.__cart = cart_coor
-        assert self.r > 0, "Wrong coordinates, r must be greater than 0"
+        assert self.r > 0, "Wrong coordinates, at least one coordinate must be greater than 0"
 
     @property
     def x(self):
@@ -680,49 +680,64 @@ class TransformationMatrix():
     def __init__(self, l, omega, S, cn, csn, rhos, rho):
         pass
 
+#%%
 
 class Wave():
     """
-    Główna klasa definiująca funkcję falową.
+    Main class for wave function.
 
-    Argumenty
-        q    :   wektor falowy
-        P    :   "L" -   fala podłużna
-                 "M" -   fala poprzeczna o polaryzacji p
-                 "N" -   fala poprzeczna o polaryzacji s
-        n    :   liczba naturalna
-        m    :   liczba całkowita mniejsza bądź równa n
-                 (może też przyjąć odpowiednie wartści ujemne)
+    Arguments
+        P:   "L" -   fala podłużna
+             "M" -   fala poprzeczna o polaryzacji p
+             "N" -   fala poprzeczna o polaryzacji s
+        m        -   degree
+        l        -   order
+        omega    -   frequency
+        c        -   velocity
     """
-    def __init__(self, q, P, m, n):
-        check_degree_and_order(m, n)
-        assert P in ('L', 'M', 'N'), "P nie przyjmuje żadnej z wymaganych wartości ('L', 'M', 'N')"
 
-        self.q = 1  #  wektor falowy do zrobienia
+    def __init__(self, P='L', m=0, l=0, omega=1, c=1):
+
+        check_degree_and_order(m, l)
+        assert P in ('L', 'M', 'N'), "P should take one of the values ('L', 'M', 'N')"
+        assert omega > 0, "omega should be greater than 0"
+        assert c > 0, "c should be greater than 0"
+
         self.P = P
-        self.n = int(n)
+        self.l = l
         self.m = m
+        self.omega = omega
+        self.c = c
+        self.wave_type = {'L': self.__podluzna,
+                          'M': self.__poprzeczna_p,
+                          'N': self.__poprzeczna_s}
 
-    def __call__(self, R):
+    def __call__(self, R=Vector3D):
         """
-        Oblicza funkcję w przestrzeni danej przez wektor R.
+        Compute function in a position given by R vector.
         """
+        assert type(R) == Vector3D, "R should by of type Vector3D"
         return None  # będzie zwracać wektor
 
-    def __funkcja_sferyczna(self, R):
-        print("Użyto atrapy funkcji sferycznej")
-        return 1
+#    def __funkcja_sferyczna(self, R):
+#        print("Użyto atrapy funkcji sferycznej")
+#        return 1
 
-    def __podluzna(self):
+    def __podluzna(self, sph, R):
+        q = self.omega / self.c
+        return (spherical_gradient(self.l, R.r, sph)
+                * sph_harm(self.m, self.l, R.theta, R.phi)
+                + sph(self.l, R.r)
+                * sph_harm_gradient(self.m, self.l, R.r, R.theta, R.phi)
+                ) / q
+
+    def __poprzeczna_p(self):
         pass
 
-    def __poprzecznap(self):
+    def __poprzeczna_s(self):
         pass
 
-    def __poprzecznas(self):
-        pass
-
-
+#%%
 class IncomingWave(Wave):
     pass
 
