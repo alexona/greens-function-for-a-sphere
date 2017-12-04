@@ -394,7 +394,36 @@ sferyczne
 \end_inset
 
 a dokładne wyrażenia podają wzory (39-40) w pracy źródłowej.
- Spełniają one poniższą własność
+ Składowe 
+\begin_inset Formula $\mathbf{\hat{e}_{2}}$
+\end_inset
+
+ i 
+\begin_inset Formula $\mathbf{\hat{e}_{3}}$
+\end_inset
+
+ to wektory jednostkowe kolejno polarny i azymutalny, które są prostopadłe
+ do wektora 
+\begin_inset Formula $\mathbf{r}$
+\end_inset
+
+.
+ Jednostkowe wektory we współrzędnych sferycznych można zdefiniować w układzie
+ kartezjańskim następująco
+\begin_inset Formula 
+\begin{eqnarray}
+\mathrm{radialny} & \, & \mathbf{\hat{r}}=\left[\cos\theta\sin\phi,\sin\theta\sin\phi,\cos\phi\right],\\
+\mathrm{azymutalny} & \, & \mathbf{\hat{\theta}}=\left[-\sin\theta,\cos\theta,0\right],\\
+\mathrm{polarny} & \, & \mathbf{\hat{\phi}}=\left[\cos\theta\cos\phi,\sin\theta\cos\phi,-\sin\phi\right].
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+VSH3 spełniają poniższą własność
 \begin_inset Formula 
 \begin{equation}
 \mathbf{X}_{l-m}=\left(-1\right)^{m+1}\mathbf{X}_{lm}^{*},
