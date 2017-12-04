@@ -397,7 +397,7 @@ a dokładne wyrażenia podają wzory (39-40) w pracy źródłowej.
  Spełniają one poniższą własność
 \begin_inset Formula 
 \begin{equation}
-\mathbf{X}_{l-m}=\left(-1\right)^{m}\mathbf{X}_{lm}^{*},
+\mathbf{X}_{l-m}=\left(-1\right)^{m+1}\mathbf{X}_{lm}^{*},
 \end{equation}
 
 \end_inset
@@ -406,7 +406,7 @@ oraz dla pola multipolowego
 \begin_inset Formula 
 \begin{gather}
 i\nabla\cdot\left(f\left(r\right)\mathbf{X}_{lm}\right)=0,\\
-i\nabla\times\left(f\left(r\right)\mathbf{X}_{lm}\right)=-\frac{l\left(l+1\right)}{r}f\mathbf{Y}_{lm}-\left(\frac{df}{dr}+\frac{1}{r}f\right)\mathbf{\Psi}_{lm},\label{eq:multi2}
+i\sqrt{l\left(l+1\right)}\,\nabla\times\left(f\left(r\right)\mathbf{X}_{lm}\right)=-\frac{l\left(l+1\right)}{r}f\mathbf{Y}_{lm}-\left(\frac{df}{dr}+\frac{1}{r}f\right)\mathbf{\Psi}_{lm},\label{eq:multi2}
 \end{gather}
 
 \end_inset
@@ -558,6 +558,11 @@ reference "eq:macierz-C"
 \end_inset
 
 ).
+ Macierze te są diagonalne w momencie pędu (lm) i symetryczne w 
+\begin_inset Formula $PP'=MM',\,LL',\,NN',\,LN',\,NL'$
+\end_inset
+
+.
  Funkcja dla fali regularnej ostatecznie ma postać
 \begin_inset Formula 
 \begin{multline}
@@ -673,6 +678,11 @@ reference "eq:macierz-P"
 \end_inset
 
 ).
+ Macierze te są diagonalne w momencie pędu (lm) i symetryczne w 
+\begin_inset Formula $PP'=MM',\,LL',\,NN',\,LN',\,NL'$
+\end_inset
+
+.
  Funkcja dla fali nieregularnej ostatecznie ma postać
 \begin_inset Formula 
 \begin{multline}
@@ -791,18 +801,7 @@ Pytania
 \end_layout
 
 \begin_layout Enumerate
-wektorowe harmoniki sferyczne
-\end_layout
-
-\begin_layout Enumerate
-pochodna w 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:multi2"
-
-\end_inset
-
-
+brak
 \end_layout
 
 \end_body
