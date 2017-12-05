@@ -112,6 +112,108 @@ Green’s function formalism for phononic crystals
 \end_layout
 
 \begin_layout Part*
+Konwencja
+\end_layout
+
+\begin_layout Standard
+Używane są układy współrzędnych kartezjańskich 
+\begin_inset Formula $\left(x,y,z\right)$
+\end_inset
+
+ i sferycznych 
+\begin_inset Formula $\left(r,\theta,\phi\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Kartezjański
+\series default
+ układ współrzędnych 
+\begin_inset Formula $\left(x,y,z\right)$
+\end_inset
+
+ - jego relacja z układem sferycznym jest następująca
+\begin_inset Formula 
+\begin{eqnarray}
+x & = & r\cos\theta\sin\phi\\
+y & = & r\sin\theta\sin\phi\\
+z & = & r\cos\phi
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Sferyczny
+\series default
+ układ współrzędnych
+\begin_inset Formula $\left(r,\theta,\phi\right)$
+\end_inset
+
+- jego relacja z układem kartezjańskim jest następująca
+\begin_inset Formula 
+\begin{eqnarray}
+\mathrm{radialna} & \, & r=\sqrt{x^{2}+y^{2}+z^{2}}\\
+\mathrm{azymutalna} & \, & \theta=\tan^{-1}\left(\frac{y}{x}\right)\\
+\mathrm{polarna} & \, & \phi=\cos^{-1}\left(\frac{z}{r}\right),
+\end{eqnarray}
+
+\end_inset
+
+gdzie 
+\begin_inset Formula $r\in[0,\inf)$
+\end_inset
+
+, 
+\begin_inset Formula $\theta\in[0,2\pi)$
+\end_inset
+
+, 
+\begin_inset Formula $\phi=\in\left[0,\pi\right]$
+\end_inset
+
+.
+ Jednostkowe wektory we współrzędnych sferycznych można zdefiniować w układzie
+ kartezjańskim następująco
+\begin_inset Formula 
+\begin{eqnarray}
+\mathrm{radialny} & \, & \mathbf{\hat{r}}=\left[\cos\theta\sin\phi,\sin\theta\sin\phi,\cos\phi\right]\\
+\mathrm{azymutalny} & \, & \boldsymbol{\hat{\theta}}=\left[-\sin\theta,\cos\theta,0\right]\\
+\mathrm{polarny} & \, & \boldsymbol{\hat{\phi}}=\left[\cos\theta\cos\phi,\sin\theta\cos\phi,-\sin\phi\right].
+\end{eqnarray}
+
+\end_inset
+
+Gradient we współrzędnych sferycznych wynosi
+\begin_inset Formula 
+\begin{equation}
+\nabla=\mathbf{\hat{r}}\frac{\partial}{\partial r}+\frac{1}{r}\boldsymbol{\hat{\phi}}\frac{\partial}{\partial\phi}+\frac{1}{r\sin\phi}\boldsymbol{\hat{\theta}}\frac{\partial}{\partial\theta}.
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Źródło
+\end_layout
+
+\begin_layout Standard
+Weisstein, Eric W.
+ "Spherical Coordinates." From MathWorld--A Wolfram Web Resource.
+ http://mathworld.wolfram.com/SphericalCoordinates.html
+\end_layout
+
+\begin_layout Part*
 Implementacja
 \end_layout
 
@@ -408,18 +510,7 @@ a dokładne wyrażenia podają wzory (39-40) w pracy źródłowej.
 \end_inset
 
 .
- Jednostkowe wektory we współrzędnych sferycznych można zdefiniować w układzie
- kartezjańskim następująco
-\begin_inset Formula 
-\begin{eqnarray}
-\mathrm{radialny} & \, & \mathbf{\hat{r}}=\left[\cos\theta\sin\phi,\sin\theta\sin\phi,\cos\phi\right],\\
-\mathrm{azymutalny} & \, & \mathbf{\hat{\theta}}=\left[-\sin\theta,\cos\theta,0\right],\\
-\mathrm{polarny} & \, & \mathbf{\hat{\phi}}=\left[\cos\theta\cos\phi,\sin\theta\cos\phi,-\sin\phi\right].
-\end{eqnarray}
-
-\end_inset
-
-
+ 
 \end_layout
 
 \begin_layout Standard
