@@ -34,9 +34,6 @@ class KnownValues(unittest.TestCase):
             ((5, 89), -0.0040334675621289 - 1j*0.0104984538988348)
             )
 
-    spherical_hn_derivative_values = ()
-
-
     def test_spherical_hn(self):
         """spherical_hn powinno dać sprawdzone rezultaty"""
         for args, value in self.spherical_hn_values:
@@ -49,6 +46,15 @@ class KnownValues(unittest.TestCase):
                 else:
                     self.assertAlmostEqual(v, r)
 
+
+class IsItWorking(unittest.TestCase):
+
+    l_values = list(range(10))
+    m_values = list(range(-10, 10))
+    r_values = list(range(-100, 100, 5))
+
+    def test_spherical_hn(l, r, derivative=False):
+        pass
 
 if __name__ == '__main__':
     unittest.main()
