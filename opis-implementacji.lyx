@@ -506,7 +506,7 @@ a dokładne wyrażenia podają wzory (39-40) w pracy źródłowej.
 
  to wektory jednostkowe kolejno polarny i azymutalny, które są prostopadłe
  do wektora 
-\begin_inset Formula $\mathbf{r}$
+\begin_inset Formula $\mathbf{r}=\left(r,0,0\right)$
 \end_inset
 
 .
