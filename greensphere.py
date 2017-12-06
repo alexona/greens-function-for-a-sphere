@@ -133,10 +133,9 @@ def sph_harm_gradient(m, l, r, theta, phi):
         :type ndarray: (c_r, c_theta, c_phi)
     """
 
-    c_rad = 0
     c_theta = 1/( r * np.sin(phi) ) * sph_harm_diff_theta(m, l, theta, phi)
     c_phi = 1/r * sph_harm_diff_phi(m, l, theta, phi)
-    return np.array((c_rad, c_theta, c_phi))
+    return np.array((0, c_theta, c_phi))
 
 
 def vsh3(m, l, theta, phi):
@@ -163,37 +162,36 @@ def vsh3(m, l, theta, phi):
 
     return np.array((0, c_theta, c_phi)) / np.sqrt( l*(l+1) )
 
-# =============================================================================
-#
-# def vsh1(m, l, r, theta, phi):
-#     """
-#     Calculate first of vector spherical harmonics (VSH).
-#
-#     Parameters:
-#         m,l             -   degree and order
-#         r, theta, phi   -   spherical coordinates
-#
-#     Returns:
-#         ndarray (c_r, c_theta, c_phi)
-#     """
-#     check_degree_and_order(m, l)
-#     return np.array((sph_harm(m, l, theta, phi), 0, 0))
-#
-#
-# def vsh2(m, l, r, theta, phi):
-#     """
-#     Calculate second of vector spherical harmonics (VSH).
-#
-#     Parameters:
-#         m,l             -   degree and order
-#         r, theta, phi   -   spherical coordinates
-#
-#     Returns:
-#         ndarray (c_r, c_theta, c_phi)
-#     """
-#     return r * sph_harm_gradient(m, l, r, theta, phi)
-#
-# =============================================================================
+
+def vsh1(m, l, r, theta, phi):
+    """Calculate first of vector spherical harmonics (VSH).
+
+    Parameters:
+        :m,l:             -   degree and order
+        :r, theta, phi:   -   spherical coordinates
+
+    Returns:
+        ndarray (c_r, c_theta, c_phi)
+    """
+    check_degree_and_order(m, l)
+    return np.array((sph_harm(m, l, theta, phi), 0, 0))
+
+
+def vsh2(m, l, theta, phi):
+    """Calculate second of vector spherical harmonics (VSH).
+
+    Parameters:
+        :m,l:             -   degree and order
+        :theta, phi:   -   spherical coordinates
+
+    Returns:
+        ndarray (c_r, c_theta, c_phi)
+    """
+    # r * sph_harm_gradient(m, l, r, theta, phi)
+    c_theta = 1/np.sin(phi) * sph_harm_diff_theta(m, l, theta, phi)
+    c_phi = sph_harm_diff_phi(m, l, theta, phi)
+    return np.array((0, c_theta, c_phi))
+
 
 def check_degree_and_order(m, l):
     """
@@ -744,12 +742,15 @@ class Wave():
                 ) / q
 
     def __poprzeczna_p(self, sph_func, R):
-        """Compute transverse spherical eigenfunction"""
+        """Compute transverse spherical eigenfunction with p-polarization"""
         q = self.omega / self.c
         return sph_func(self.l, q*R.r) * vsh3(self.m, self.l, R.theta, R.phi)
 
-    def __poprzeczna_s(self):
-        pass
+#    def __poprzeczna_s(self, sph_func, R):
+#        """Compute transverse spherical eigenfunction with s-polarization"""
+#        q = self.omega / self.c
+#        # rot(f*A) = f * rot(A) - A x grad(f)
+#        sph_func(self.l, q*R.r) *
 
 #%%
 class IncomingWave(Wave):
