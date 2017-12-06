@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 """
+Moduł służący do obliczania funkcji Greena dla jednorodnej sfery zanurzonej
+w jednorodnym ośrodku.
+
 Resources:
     Bessel functions in SciPy
         https://www.johndcook.com/blog/bessel_python/
@@ -38,6 +41,11 @@ Convention:
             :theta: azimuthal (longitudinal) coordinate; must be in [0, 2*pi];
             :phi:   polar (colatitudinal) coordinate; must be in [0, pi];
 """
+
+__author__ = "Monika Kubek"
+__credits__ = ["Monika Kubek", "Karolina Słowik"]
+__email__ = "kubek.monika@wp.pl"
+
 
 import numpy as np
 from scipy.special import sph_harm, spherical_jn, spherical_yn
@@ -685,27 +693,26 @@ class Vector3D():
         return phi
 
 
-class TransformationMatrix():
-    """
-    Matrix used to transform plane wave into spherical.
-    Dimensions: 3l x 3l
-    """
-    def __init__(self, l, omega, S, cn, csn, rhos, rho):
-        pass
+#class TransformationMatrix():
+#    """
+#    Matrix used to transform plane wave into spherical.
+#    Dimensions: 3l x 3l
+#    """
+#    def __init__(self, l, omega, S, cn, csn, rhos, rho):
+#        pass
 
-#%%
 
 class Wave():
     """Main class for a wave function.
 
-    Arguments
-        P:   "L" -   fala podłużna
-             "M" -   fala poprzeczna o polaryzacji p
-             "N" -   fala poprzeczna o polaryzacji s
-        m        -   degree
-        l        -   order
-        omega    -   frequency
-        c        -   velocity
+    Arguments:
+        :P: - "L" fala podłużna
+            - "M" fala poprzeczna o polaryzacji p
+            - "N" fala poprzeczna o polaryzacji s
+        :m: degree
+        :l: order
+        :omega: frequency
+        :c: velocity
     """
 
     def __init__(self, P='L', m=0, l=0, omega=1, c=speed_of_light):
@@ -724,15 +731,25 @@ class Wave():
                           'M': self.__poprzeczna_p,
                           'N': self.__poprzeczna_s}
 
-    def __call__(self, R=Vector3D):
-        """Compute function in a position given by R vector."""
-        assert type(R) == Vector3D, "R should by of type Vector3D"
-        return None  # będzie zwracać wektor
+#    def __call__(self, R=Vector3D):
+#        """Compute function in a position given by R vector."""
+#        assert type(R) == Vector3D, "R should by of type Vector3D"
+#        return None  # będzie zwracać wektor
 
-#    def __funkcja_sferyczna(self, R):
-#        print("Użyto atrapy funkcji sferycznej")
-#        return 1
+#%%
 
+class SphericalWave(Wave):
+    """Main class for a  spherical wave function.
+
+    Arguments:
+        :P: - "L" fala podłużna
+            - "M" fala poprzeczna o polaryzacji p
+            - "N" fala poprzeczna o polaryzacji s
+        :m: degree
+        :l: order
+        :omega: frequency
+        :c: velocity
+    """
     def __podluzna(self, sph_func, R):
         """Compute longitudal spherical eigenfunction"""
         q = self.omega / self.c
@@ -759,8 +776,8 @@ class Wave():
                  ) * vsh2(self.m, self.l, R.theta, R.phi)
                 ) / np.sqrt(a) / q
 
-
 #%%
+
 class IncomingWave(Wave):
     pass
 
