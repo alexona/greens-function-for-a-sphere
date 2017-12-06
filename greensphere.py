@@ -41,6 +41,7 @@ Convention:
 
 import numpy as np
 from scipy.special import sph_harm, spherical_jn, spherical_yn
+from scipy.constants import speed_of_light
 
 
 def spherical_hn(l, r, derivative=False):
@@ -163,12 +164,12 @@ def vsh3(m, l, theta, phi):
     return np.array((0, c_theta, c_phi)) / np.sqrt( l*(l+1) )
 
 
-def vsh1(m, l, r, theta, phi):
+def vsh1(m, l, theta, phi):
     """Calculate first of vector spherical harmonics (VSH).
 
     Parameters:
         :m,l:             -   degree and order
-        :r, theta, phi:   -   spherical coordinates
+        :theta, phi:   -   spherical coordinates
 
     Returns:
         ndarray (c_r, c_theta, c_phi)
@@ -695,7 +696,7 @@ class TransformationMatrix():
 #%%
 
 class Wave():
-    """Main class for wave function.
+    """Main class for a wave function.
 
     Arguments
         P:   "L" -   fala podłużna
@@ -707,8 +708,8 @@ class Wave():
         c        -   velocity
     """
 
-    def __init__(self, P='L', m=0, l=0, omega=1, c=1):
-
+    def __init__(self, P='L', m=0, l=0, omega=1, c=speed_of_light):
+        """Initialize a wave function"""
         check_degree_and_order(m, l)
         assert P in ('L', 'M', 'N'), "P should take one of the values ('L', 'M', 'N')"
         assert omega > 0, "omega should be greater than 0"
@@ -746,11 +747,18 @@ class Wave():
         q = self.omega / self.c
         return sph_func(self.l, q*R.r) * vsh3(self.m, self.l, R.theta, R.phi)
 
-#    def __poprzeczna_s(self, sph_func, R):
-#        """Compute transverse spherical eigenfunction with s-polarization"""
-#        q = self.omega / self.c
-#        # rot(f*A) = f * rot(A) - A x grad(f)
-#        sph_func(self.l, q*R.r) *
+    def __poprzeczna_s(self, sph_func, R):
+        """Compute transverse spherical eigenfunction with s-polarization"""
+        q = self.omega / self.c
+        r = q * R.r
+        a = self.l * ( self.l + 1 )
+        return (-a * sph_func(self.l, r) *
+                vsh1(self.m, self.l, R.theta, R.phi) / r -
+                (sph_func(self.l, r, derivative=True) +
+                 sph_func(self.l, r) / r
+                 ) * vsh2(self.m, self.l, R.theta, R.phi)
+                ) / np.sqrt(a) / q
+
 
 #%%
 class IncomingWave(Wave):
