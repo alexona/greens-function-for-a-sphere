@@ -139,12 +139,12 @@ def sph_harm_gradient(m, l, r, theta, phi):
     return np.array((c_rad, c_theta, c_phi))
 
 
-def vsh3(m, l, r, theta, phi):
+def vsh3(m, l, theta, phi):
     """Calculate a vector spherical harmonics (VSH).
 
     Parameters:
         :m,l:               degree and order
-        :r, theta, phi:     spherical coordinates
+        :theta, phi:     spherical coordinates
 
     Returns:
         :type ndarray: (c_r, c_theta, c_phi)
@@ -334,8 +334,7 @@ wL4 = lambda l, zl, zt: (l * (l + 1) - zt**2 / 2) * spherical_hn(l, zl) \
                     - 2 * zl * spherical_hn(l, zl, derivative=True)
 
 def matrix_M1(l, omega, S, cn, csn, rhos, rho):
-    """
-    Creates the M matrix
+    """Creates the M matrix
 
     Parameters:
         l       -   order
@@ -369,8 +368,7 @@ def matrix_M1(l, omega, S, cn, csn, rhos, rho):
 
 
 def matrix_N1(l, omega, S, cn):
-    """
-    Creates the N matrix
+    """Creates the N matrix
 
     Parameters:
         l       -   order
@@ -393,8 +391,7 @@ def matrix_N1(l, omega, S, cn):
 
 
 def matrix_K1(l, omega, S, cn, csn, rhos, rho):
-    """
-    Creates the K matrix
+    """Creates the K matrix
 
     Parameters:
         l       -   order
@@ -418,8 +415,7 @@ def matrix_K1(l, omega, S, cn, csn, rhos, rho):
 
 
 def matrix_L1(l, omega, S, cn):
-    """
-    Creates the L matrix
+    """Creates the L matrix
 
     Parameters:
         l       -   order
@@ -437,8 +433,7 @@ def matrix_L1(l, omega, S, cn):
 
 
 def matrix_M2(l, omega, S, cn, csn, rhos, rho):
-    """
-    Creates the M matrix
+    """Creates the M matrix
 
     Parameters:
         l       -   order
@@ -474,8 +469,7 @@ def matrix_M2(l, omega, S, cn, csn, rhos, rho):
 
 
 def matrix_N2(l, omega, S, cn):
-    """
-    Creates the N matrix
+    """Creates the N matrix
 
     Parameters:
         l       -   order
@@ -498,8 +492,7 @@ def matrix_N2(l, omega, S, cn):
 
 
 def matrix_K2(l, omega, S, cn, csn, rhos, rho):
-    """
-    Creates the K matrix
+    """Creates the K matrix
 
     Parameters:
         l       -   order
@@ -523,8 +516,7 @@ def matrix_K2(l, omega, S, cn, csn, rhos, rho):
 
 
 def matrix_L2(l, omega, S, cn):
-    """
-    Creates the L matrix
+    """Creates the L matrix
 
     Parameters:
         l       -   order
@@ -542,8 +534,7 @@ def matrix_L2(l, omega, S, cn):
 
 
 def matrices_TC(l, omega, S, cn, csn, rhos, rho):
-    """
-    Creates the T and C matrices
+    """Creates the T and C matrices
 
     Parameters:
         l       -   order
@@ -573,8 +564,7 @@ def matrices_TC(l, omega, S, cn, csn, rhos, rho):
 
 
 def matrices_QP(l, omega, S, cn, csn, rhos, rho):
-    """
-    Creates the Q and P matrices
+    """Creates the Q and P matrices
 
     Parameters:
         l       -   order
@@ -604,12 +594,11 @@ def matrices_QP(l, omega, S, cn, csn, rhos, rho):
 
 
 class Vector3D():
-    """
-    Klasa tworząca wektor o współrzędnych rzeczywistych
+    """Klasa tworząca wektor o współrzędnych rzeczywistych
 
     Argumenty
-        c1, c2, c3  -   trzy współrzędne
-        coortype    -   określa typ współrzędnych
+        :c1, c2, c3:    trzy współrzędne
+        :coortype:      określa typ współrzędnych
                         "cartesian" - kartezjańskie
                         "spherical" - sferyczne
 
@@ -618,10 +607,10 @@ class Vector3D():
 
     Współrzędne sferyczne
         (c1, c2, c3) = (r, theta, phi)
-    gdzie
-        r       -   radialna
-        theta   -   azymutalna [0, 2*pi]
-        phi     -   polarna [0, pi]
+        gdzie
+            :r:       -   radialna
+            :theta:   -   azymutalna [0, 2*pi]
+            :phi:     -   polarna [0, pi]
     """
 
     def __init__(self, c1=1, c2=0, c3=0, coortype='cartesian'):
@@ -708,8 +697,7 @@ class TransformationMatrix():
 #%%
 
 class Wave():
-    """
-    Main class for wave function.
+    """Main class for wave function.
 
     Arguments
         P:   "L" -   fala podłużna
@@ -738,9 +726,7 @@ class Wave():
                           'N': self.__poprzeczna_s}
 
     def __call__(self, R=Vector3D):
-        """
-        Compute function in a position given by R vector.
-        """
+        """Compute function in a position given by R vector."""
         assert type(R) == Vector3D, "R should by of type Vector3D"
         return None  # będzie zwracać wektor
 
@@ -749,6 +735,7 @@ class Wave():
 #        return 1
 
     def __podluzna(self, sph_func, R):
+        """Compute longitudal spherical eigenfunction"""
         q = self.omega / self.c
         return (spherical_gradient(self.l, q*R.r, sph_func)
                 * sph_harm(self.m, self.l, R.theta, R.phi)
@@ -757,9 +744,9 @@ class Wave():
                 ) / q
 
     def __poprzeczna_p(self, sph_func, R):
-#        q = self.omega / self.c
-#        return sph_func(self.l, q*R.r) * vsh3(self.m, self.l,
-        pass
+        """Compute transverse spherical eigenfunction"""
+        q = self.omega / self.c
+        return sph_func(self.l, q*R.r) * vsh3(self.m, self.l, R.theta, R.phi)
 
     def __poprzeczna_s(self):
         pass
