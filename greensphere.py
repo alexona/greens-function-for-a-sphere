@@ -38,8 +38,8 @@ Convention:
     spherical coordinates
         :(r, theta, phi): where
             :r:     radial coordinate; must be in (0, oo);
-            :theta: azimuthal (longitudinal) coordinate; must be in [0, 2*pi];
-            :phi:   polar (colatitudinal) coordinate; must be in [0, pi];
+            :theta: polar coordinate; must be in [0, pi];
+            :phi:   azimuthal coordinate; must be in [0, 2*pi];
 """
 
 __author__ = "Monika Kubek"
@@ -48,29 +48,61 @@ __email__ = "kubek.monika@wp.pl"
 
 
 import numpy as np
-from scipy.special import sph_harm, spherical_jn, spherical_yn
+from scipy.special import spherical_jn, spherical_yn
 from scipy.constants import speed_of_light
 
 
+def sph_harm(m, n, theta, phi):
+    """Redefine spherical harmonics from scipy.special to match convention.
+
+    Parameters
+    ----------
+    m : array_like
+        Order of the harmonic (int); must have ``|m| <= n``.
+    n : array_like
+       Degree of the harmonic (int); must have ``n >= 0``. This is
+       often denoted by ``l`` (lower case L) in descriptions of
+       spherical harmonics.
+    theta : array_like
+       Polar (colatitudinal) coordinate; must be in ``[0, pi]``.
+    phi : array_like
+       Azimuthal (longitudinal) coordinate; must be in ``[0, 2*pi]``.
+
+    Returns
+    -------
+    y_mn : complex float
+       The harmonic :math:`Y^m_n` sampled at ``theta`` and ``phi``.
+
+    """
+    from scipy.special import sph_harm as old_sph_harm
+    return old_sph_harm(m, n, phi, theta)
+
+
 def spherical_hn(l, r, derivative=False):
-    """Spherical Hankel Function of the First kind
+    """Spherical Hankel function of the First kind or its derivative.
 
-    Parameters:
-        :l:  natural number, order of the function
-        :r:  a real, positive variable
+    Parameters
+    ----------
+    l : int
+        Order of the Hankel function; (l >= 0).
+    r : float, array_like
+        Argument of the Hankel function.
+    derivative : boolean, default False
+        Set to True to return a derivative of the function.
 
-    Based on:
-        :Weisstein, Eric W. "Spherical Hankel Function of the First Kind.":
+    References
+    ----------
+    .. [1]  Weisstein, Eric W. "Spherical Hankel Function of the First Kind."
             From MathWorld--A Wolfram Web Resource.
             http://mathworld.wolfram.com/SphericalHankelFunctionoftheFirstKind.html
-        :NIST:
+    .. [2]  NIST
             http://dlmf.nist.gov/10.47
-    """
 
-    sph_func = spherical_jn(l, r) + 1j * spherical_yn(l, r)
+    """
+    sph_func = lambda l, r: spherical_jn(l, r) + 1j * spherical_yn(l, r)
 
     if derivative == False:
-        return sph_func
+        return sph_func(l, r)
     elif derivative == True:
         try:
             return (l / r) * sph_func(l, r) - sph_func(l+1, r)
