@@ -139,9 +139,9 @@ Kartezjański
  - jego relacja z układem sferycznym jest następująca
 \begin_inset Formula 
 \begin{eqnarray}
-x & = & r\cos\theta\sin\phi\\
-y & = & r\sin\theta\sin\phi\\
-z & = & r\cos\phi
+x & = & r\cos\phi\sin\theta\\
+y & = & r\sin\phi\sin\theta\\
+z & = & r\cos\theta
 \end{eqnarray}
 
 \end_inset
@@ -162,8 +162,8 @@ Sferyczny
 \begin_inset Formula 
 \begin{eqnarray}
 \mathrm{radialna} & \, & r=\sqrt{x^{2}+y^{2}+z^{2}}\\
-\mathrm{azymutalna} & \, & \theta=\tan^{-1}\left(\frac{y}{x}\right)\\
-\mathrm{polarna} & \, & \phi=\cos^{-1}\left(\frac{z}{r}\right),
+\mathrm{polarna} & \, & \theta=\cos^{-1}\left(\frac{z}{r}\right)\\
+\mathrm{azymutalna} & \, & \phi=\tan^{-1}\left(\frac{y}{x}\right),
 \end{eqnarray}
 
 \end_inset
@@ -173,11 +173,11 @@ gdzie
 \end_inset
 
 , 
-\begin_inset Formula $\theta\in[0,2\pi)$
+\begin_inset Formula $\theta\in[0,\pi)$
 \end_inset
 
 , 
-\begin_inset Formula $\phi=\in\left[0,\pi\right]$
+\begin_inset Formula $\phi=\in\left[0,2\pi\right]$
 \end_inset
 
 .
@@ -185,9 +185,9 @@ gdzie
  kartezjańskim następująco
 \begin_inset Formula 
 \begin{eqnarray}
-\mathrm{radialny} & \, & \mathbf{\hat{r}}=\left[\cos\theta\sin\phi,\sin\theta\sin\phi,\cos\phi\right]\\
-\mathrm{azymutalny} & \, & \boldsymbol{\hat{\theta}}=\left[-\sin\theta,\cos\theta,0\right]\\
-\mathrm{polarny} & \, & \boldsymbol{\hat{\phi}}=\left[\cos\theta\cos\phi,\sin\theta\cos\phi,-\sin\phi\right].
+\mathrm{radialny} & \, & \mathbf{\hat{r}}=\left[\sin\theta\cos\phi,\sin\theta\sin\phi,\cos\theta\right]\\
+\mathrm{polarny} & \, & \boldsymbol{\hat{\theta}}=\left[\cos\theta\cos\phi,\sin\phi\cos\theta,-\sin\theta\right]\\
+\mathrm{azymutalny} & \, & \boldsymbol{\hat{\phi}}=\left[-\sin\phi,\cos\phi,0\right].
 \end{eqnarray}
 
 \end_inset
@@ -195,7 +195,7 @@ gdzie
 Gradient we współrzędnych sferycznych wynosi
 \begin_inset Formula 
 \begin{equation}
-\nabla=\mathbf{\hat{r}}\frac{\partial}{\partial r}+\frac{1}{r}\boldsymbol{\hat{\phi}}\frac{\partial}{\partial\phi}+\frac{1}{r\sin\phi}\boldsymbol{\hat{\theta}}\frac{\partial}{\partial\theta}.
+\nabla=\mathbf{\hat{r}}\frac{\partial}{\partial r}+\frac{1}{r}\frac{\partial}{\partial\theta}\boldsymbol{\hat{\theta}}+\frac{1}{r\sin\theta}\frac{\partial}{\partial\phi}\boldsymbol{\hat{\phi}}.
 \end{equation}
 
 \end_inset
@@ -207,10 +207,16 @@ Gradient we współrzędnych sferycznych wynosi
 Źródło
 \end_layout
 
-\begin_layout Standard
+\begin_layout Enumerate
 Weisstein, Eric W.
  "Spherical Coordinates." From MathWorld--A Wolfram Web Resource.
  http://mathworld.wolfram.com/SphericalCoordinates.html
+\end_layout
+
+\begin_layout Enumerate
+Spherical coordinate system, https://en.wikipedia.org/w/index.php?title=Spherical_c
+oordinate_system&oldid=811031286 (last visited Dec.
+ 7, 2017).
 \end_layout
 
 \begin_layout Part*
