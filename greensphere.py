@@ -648,8 +648,8 @@ class Vector3D():
         (c1, c2, c3) = (r, theta, phi)
         gdzie
             :r:       -   radialna
-            :theta:   -   azymutalna [0, 2*pi]
-            :phi:     -   polarna [0, pi]
+            :theta:   -   polarna [0, pi]
+            :phi:     -   azymutalna [0, 2*pi]
     """
 
     def __init__(self, c1=1, c2=0, c3=0, coortype='cartesian'):
@@ -658,7 +658,7 @@ class Vector3D():
         elif coortype == 'spherical':
             self.sph = np.array([c1, c2, c3])
         else:
-            raise "Podano zły typ współrzędnych"
+            raise "Wrong coordinate type"
 
     @property
     def cart(self):
@@ -687,15 +687,26 @@ class Vector3D():
 
     @sph.setter
     def sph(self, sph_coor):
-        r, theta, phi = sph_coor
+        """Set spherical coordinates"""
+        # set proper boundaries for angles
+        sph_coor_new = list(sph_coor)
+        for angle, i in zip(sph_coor[1:], (1, 2)):
+            lim = i*np.pi
+            if angle < 0:
+                angle += -lim * (angle // lim)
+            elif angle > lim:
+                angle -= lim * (angle // lim)
+            sph_coor_new[i] = angle
+
+        r, theta, phi = sph_coor_new
 
         assert r > 0, "r <= 0"
-        assert theta >= 0 and theta <= 2 * np.pi, "Zła wartość kąta theta"
-        assert phi >= 0 and phi <= np.pi, "Zła wartość kąta phi"
+        assert phi >= 0 and phi <= 2 * np.pi, "Zła wartość kąta phi"
+        assert theta >= 0 and theta <= np.pi, "Zła wartość kąta theta"
 
-        x = r * np.cos(theta) * np.sin(phi)
-        y = r * np.sin(theta) * np.sin(phi)
-        z = r * np.cos(phi)
+        x = r * np.cos(phi) * np.sin(theta)
+        y = r * np.sin(phi)* np.sin(theta)
+        z = r * np.cos(theta)
         self.__cart = np.array((x, y, z))
 
     @property
@@ -703,26 +714,26 @@ class Vector3D():
         return np.sqrt(self.x**2 + self.y**2 + self.z**2)
 
     @property
-    def theta(self):
+    def phi(self):
         if self.x + self.y == 0:  # bo osobliwość
             return 0
         try:
-            theta = np.arctan(self.y/self.x)
+            phi = np.arctan(self.y/self.x)
         except (RuntimeWarning, ZeroDivisionError):
             sign = np.sign(self.y)
             if sign:
-                theta = np.pi + sign * np.pi / 2
+                phi = np.pi + sign * np.pi / 2
             else:
-                theta = 0
-        return theta
+                phi = 0
+        return phi
 
     @property
-    def phi(self):
+    def theta(self):
         try:
-            phi = np.arccos(self.z/self.r)
+            theta = np.arccos(self.z/self.r)
         except (RuntimeWarning, ZeroDivisionError):
-            phi = 0
-        return phi
+            theta = 0
+        return theta
 
 
 #class TransformationMatrix():
