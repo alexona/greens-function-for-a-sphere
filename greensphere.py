@@ -3,43 +3,49 @@
 Moduł służący do obliczania funkcji Greena dla jednorodnej sfery zanurzonej
 w jednorodnym ośrodku.
 
-Resources:
-    Bessel functions in SciPy
-        https://www.johndcook.com/blog/bessel_python/
-    Spherical Harmonic
-        http://functions.wolfram.com/HypergeometricFunctions/SphericalHarmonicYGeneral/
+Resources
+---------
+Bessel functions in SciPy
+    https://www.johndcook.com/blog/bessel_python/
+Spherical Harmonic
+    http://functions.wolfram.com/HypergeometricFunctions/SphericalHarmonicYGeneral/
 
 
-Z modułu scipy.special importujemy:
-    sph_harm
-        - harmoniki sferyczne
-    spherical_jn
-        - sferyczna funkcja Bessela pierwszego rodzaju
-    spherical_yn
-        - sferyczna funkcja Bessela drugiego rodzaju
+Z modułu scipy.special importujemy
+----------------------------------
+sph_harm
+    - harmoniki sferyczne
+spherical_jn
+    - sferyczna funkcja Bessela pierwszego rodzaju
+spherical_yn
+    - sferyczna funkcja Bessela drugiego rodzaju
 
-Zostały stworzone funkcje:
-    spherical_hn
-        - sferyczna funkcja Hankel'a pierwszego rodzaju
-    spherical_gradient
-        - gradient danej funkcji sferycznej
-    sph_harm_diff_theta
-        - pochodna cząstkowa harmonik sferycznych po theta
-    sph_harm_diff_phi
-        - pochodna cząstkowa harmonik sferycznych po phi
-    sph_harm_gradient
-        - gradient z harmonik sferycznych
-    vsh1, vsh2, vsh3
-        - wektorowe harmoniki sferyczne
 
-Convention:
-    cartesian coordinates
-        :(x, y, z):
-    spherical coordinates
-        :(r, theta, phi): where
-            :r:     radial coordinate; must be in (0, oo);
-            :theta: polar coordinate; must be in [0, pi];
-            :phi:   azimuthal coordinate; must be in [0, 2*pi];
+Zostały stworzone funkcje
+-------------------------
+spherical_hn
+    - sferyczna funkcja Hankel'a pierwszego rodzaju
+spherical_gradient
+    - gradient danej funkcji sferycznej
+sph_harm_diff_theta
+    - pochodna cząstkowa harmonik sferycznych po theta
+sph_harm_diff_phi
+    - pochodna cząstkowa harmonik sferycznych po phi
+sph_harm_gradient
+    - gradient z harmonik sferycznych
+vsh1, vsh2, vsh3
+    - wektorowe harmoniki sferyczne
+
+
+Convention
+----------
+cartesian coordinates
+    :(x, y, z):
+spherical coordinates
+    :(r, theta, phi): where
+        :r:     radial coordinate; must be in (0, oo);
+        :theta: polar coordinate; must be in [0, pi];
+        :phi:   azimuthal coordinate; must be in [0, 2*pi];
 """
 
 __author__ = "Monika Kubek"
@@ -115,13 +121,19 @@ def spherical_hn(l, r, derivative=False):
 def spherical_gradient(l, r, sph_func):
     """Calculate a gradient of a chosen spherical function (_jn, _yn, _hn).
 
-    Parameters:
-        :l:         natural number
-        :r:         is a real, positive variable
-        :sph_func:  spherical function which derivative is calculated
+    Parameters
+    ----------
+    l: int
+        Order of the spherical function.
+    r: float
+        Is a real, positive variable.
+    sph_func: func
+        Spherical function which derivative is calculated.
 
-    Returns:
-        value of the derivative as ndarray
+    Returns
+    -------
+    grad: ndarray
+        Gradient of the function.
     """
 
     assert l%1 == 0 and l >= 0, "n must be a natural number"
@@ -130,15 +142,24 @@ def spherical_gradient(l, r, sph_func):
 
 
 def sph_harm_diff_theta(m, l, theta, phi):
-    """First derivative of spherical harmonic with respect to theta.
+    """First derivative of spherical harmonics with respect to theta.
 
-    Parameters:
-        :m,l:           degree and order
-        :theta, phi:    spherical coordinates
+    Parameters
+    ----------
+    m,l: int
+        Degree and order.
+    theta, phi: float
+        Spherical coordinates.
 
-    Based on:
-    http://functions.wolfram.com/Polynomials/SphericalHarmonicY/20/01/01/
-    Warning! Different convention in source - switched theta and phi.
+    Returns
+    -------
+    dY/dtheta: complex
+        Derivative of spherical harmonics over theta.
+
+    Based on
+    --------
+    .. [1]  Wolfram functions
+            http://functions.wolfram.com/Polynomials/SphericalHarmonicY/20/01/01/
     """
 
     check_degree_and_order(m, l)
@@ -148,15 +169,24 @@ def sph_harm_diff_theta(m, l, theta, phi):
 
 
 def sph_harm_diff_phi(m, l, theta, phi):
-    """First derivative of spherical harmonic with respect to phi.
+    """First derivative of spherical harmonics with respect to phi.
 
-    Parameters:
-        :m,l:           degree and order
-        :theta, phi:    spherical coordinates
+    Parameters
+    ----------
+    m,l: int
+        Degree and order.
+    theta, phi: float
+        Spherical coordinates.
 
-    Based on:
-    http://functions.wolfram.com/Polynomials/SphericalHarmonicY/20/01/02/
-    Warning! Different convention in source - switched theta and phi.
+    Returns
+    -------
+    dY/dtheta: complex
+        Derivative of spherical harmonics over phi.
+
+    Based on
+    --------
+    .. [1]  Wolfram functions
+            http://functions.wolfram.com/Polynomials/SphericalHarmonicY/20/01/02/
     """
 
     check_degree_and_order(m, l)
@@ -166,12 +196,17 @@ def sph_harm_diff_phi(m, l, theta, phi):
 def sph_harm_gradient(m, l, r, theta, phi):
     """Gradient of spherical harmonic.
 
-    Parameters:
-        :m,l: degree and order
-        :r, theta, phi: spherical coordinates
+    Parameters
+    ----------
+    m,l: integer
+        degree and order
+    r, theta, phi: real
+        spherical coordinates
 
-    Returns:
-        :type ndarray: (c_r, c_theta, c_phi)
+    Returns
+    -------
+    grad: ndarray
+        (c_r, c_theta, c_phi)
     """
 
     c_theta = 1/( r * np.sin(phi) ) * sph_harm_diff_theta(m, l, theta, phi)
@@ -187,7 +222,8 @@ def vsh3(m, l, theta, phi):
         :theta, phi:     spherical coordinates
 
     Returns:
-        :type ndarray: (c_r, c_theta, c_phi)
+        :vsh3: ndarray
+        (c_r, c_theta, c_phi)
     """
 
     check_degree_and_order(m, l)
@@ -198,10 +234,19 @@ def vsh3(m, l, theta, phi):
                sph_harm(m-1, l, theta, phi) - m * np.sin(phi) *
                sph_harm(m, l, theta, phi) + alpha(m, l) * np.cos(phi) *
                np.exp( -1j*theta ) * sph_harm(m+1, l, theta, phi))
-    c_phi = 1j*((alpha(-m, l) * np.exp( 1j*theta ) * sph_harm(m-1, l, theta, phi) -
-                 alpha(m, l) * np.exp( -1j*theta ) * sph_harm(m+1, l, theta, phi)))
+    c_phi = (alpha(-m, l) * np.exp( 1j*theta ) * sph_harm(m-1, l, theta, phi) -
+             alpha(m, l) * np.exp( -1j*theta ) * sph_harm(m+1, l, theta, phi)
+             ) * 1j
 
-    return np.array((0, c_theta, c_phi)) / np.sqrt( l*(l+1) )
+    return np.array( (0, c_theta, c_phi)) / np.sqrt( l*(l+1) )
+
+
+def vsh3_definition(m, l, theta, phi):
+    """VSH3 from definiotion."""
+    r = 1
+    R = np.array([r, 0, 0])
+    gradY = sph_harm_gradient(m, l, r, theta, phi)
+    return -1j * np.cross(R, gradY) / np.sqrt( l * (l + 1))
 
 
 def vsh1(m, l, theta, phi):
