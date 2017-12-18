@@ -6,7 +6,7 @@ Created on Mon Oct  9 16:56:01 2017
 @author: monika
 """
 
-import mathtools
+import greensphere
 import unittest
 import numpy as np
 
@@ -37,7 +37,7 @@ class KnownValues(unittest.TestCase):
     def test_spherical_hn(self):
         """spherical_hn powinno dać sprawdzone rezultaty"""
         for args, value in self.spherical_hn_values:
-            result = mathtools.spherical_hn(*args)
+            result = greensphere.spherical_hn(*args)
             for r, v in ((result.real, value.real), (result.imag, value.imag)):
                 if np.isnan(r):  # or np.isinf(r):
                     self.assertTrue(np.isnan(v))
@@ -45,6 +45,15 @@ class KnownValues(unittest.TestCase):
                     self.assertTrue(np.isinf(v))
                 else:
                     self.assertAlmostEqual(v, r)
+
+
+class CheckFunctionVSH3(unittest.TestCase):
+
+    def vsh3_definition(m, l, theta, phi):
+        r = 1
+        R = np.array([r, 0, 0])
+        gradY = greensphere.sph_harm_gradient(m, l, r, theta, phi)
+        return -1j * np.cross(R, gradY) / np.sqrt( l * (l + 1))
 
 
 class IsItWorking(unittest.TestCase):
