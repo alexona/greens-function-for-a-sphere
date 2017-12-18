@@ -238,6 +238,16 @@ Rozważamy pojedynczą, jednorodną sferę o promieniu
 \end_inset
 
 .
+ Fale podłużna i poprzeczna rozchodzą się niezależnie kolejno z prędkością
+ 
+\begin_inset Formula $c_{l}$
+\end_inset
+
+ i 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -266,9 +276,56 @@ Zastosowano układ współrzędnych sferycznych oraz następujące oznaczenia:
 \begin_inset Formula $q=\omega/c_{\nu}$
 \end_inset
 
-,
+, 
+\begin_inset Formula $\mathbf{q}=q_{1}\boldsymbol{\hat{e}_{1}}+q_{2}\boldsymbol{\hat{e}_{2}}+q_{3}\boldsymbol{\hat{e}_{3}}$
+\end_inset
+
+
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\boldsymbol{\hat{e}}_{\mathrm{p}}$
+\end_inset
+
+ to wektor jednostkowy, 
+\begin_inset Formula $\mathrm{p}=1,2,3$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathrm{p}=1$
+\end_inset
+
+ definiuje falę podłużną: radialny wektor jednostkowy wzdłuż 
+\begin_inset Formula $\mathbf{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathrm{p}=2,3$
+\end_inset
+
+ definiują kolejno fale poprzeczne (polaryzacja 
+\begin_inset Formula $p$
+\end_inset
+
+ oraz 
+\begin_inset Formula $s$
+\end_inset
+
+): polarny i azymutalny wektor jednostkowy prostopadły do 
+\begin_inset Formula $\mathbf{q}$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 \begin_inset Formula $\omega$
 \end_inset
@@ -516,7 +573,11 @@ a dokładne wyrażenia podają wzory (39-40) w pracy źródłowej.
 \end_inset
 
 .
- 
+ VSH3 jest zatem z definicji niezależne od długości wektora 
+\begin_inset Formula $r$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
