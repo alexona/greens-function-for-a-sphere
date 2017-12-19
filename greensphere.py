@@ -59,7 +59,7 @@ from scipy.constants import speed_of_light
 
 
 def sph_harm(m, n, theta, phi):
-    """Redefine spherical harmonics from scipy.special to match convention.
+    """Redefine spherical harmonics from scipy.special to match physics convention.
 
     Parameters
     ----------
@@ -78,7 +78,6 @@ def sph_harm(m, n, theta, phi):
     -------
     y_mn : complex float
        The harmonic :math:`Y^m_n` sampled at ``theta`` and ``phi``.
-
     """
     from scipy.special import sph_harm as old_sph_harm
     return old_sph_harm(m, n, phi, theta)
@@ -103,7 +102,6 @@ def spherical_hn(l, r, derivative=False):
             http://mathworld.wolfram.com/SphericalHankelFunctionoftheFirstKind.html
     .. [2]  NIST
             http://dlmf.nist.gov/10.47
-
     """
     sph_func = lambda l, r: spherical_jn(l, r) + 1j * spherical_yn(l, r)
 
@@ -135,9 +133,7 @@ def spherical_gradient(l, r, sph_func):
     grad: ndarray
         Gradient of the function.
     """
-
-    assert l%1 == 0 and l >= 0, "n must be a natural number"
-
+    assert l%1 == 0 and l >= 0, "l must be a natural number"
     return np.array((sph_func(l, r, derivative=True), 0, 0))
 
 
@@ -156,15 +152,14 @@ def sph_harm_diff_theta(m, l, theta, phi):
     dY/dtheta: complex
         Derivative of spherical harmonics over theta.
 
-    Based on
+    References
     --------
     .. [1]  Wolfram functions
             http://functions.wolfram.com/Polynomials/SphericalHarmonicY/20/01/01/
     """
-
     check_degree_and_order(m, l)
-    return (m * sph_harm(m, l, theta, phi) / np.tan(phi) +
-            np.sqrt( (l - m) * (l + m + 1) ) * np.exp( -1j*theta ) *
+    return (m * sph_harm(m, l, theta, phi) / np.tan(theta) +
+            np.sqrt( (l - m) * (l + m + 1) ) * np.exp( -1j*phi ) *
             sph_harm(m+1, l, theta, phi))
 
 
@@ -183,18 +178,17 @@ def sph_harm_diff_phi(m, l, theta, phi):
     dY/dtheta: complex
         Derivative of spherical harmonics over phi.
 
-    Based on
+    References
     --------
     .. [1]  Wolfram functions
             http://functions.wolfram.com/Polynomials/SphericalHarmonicY/20/01/02/
     """
-
     check_degree_and_order(m, l)
     return 1j * m * sph_harm(m, l, theta, phi)
 
 
 def sph_harm_gradient(m, l, r, theta, phi):
-    """Gradient of spherical harmonic.
+    """Gradient of spherical harmonics.
 
     Parameters
     ----------
@@ -208,24 +202,26 @@ def sph_harm_gradient(m, l, r, theta, phi):
     grad: ndarray
         (c_r, c_theta, c_phi)
     """
-
-    c_theta = 1/( r * np.sin(phi) ) * sph_harm_diff_theta(m, l, theta, phi)
-    c_phi = 1/r * sph_harm_diff_phi(m, l, theta, phi)
+    c_theta = sph_harm_diff_theta(m, l, theta, phi) / r
+    c_phi = sph_harm_diff_phi(m, l, theta, phi) / (r * np.sin(theta))
     return np.array((0, c_theta, c_phi))
 
 
 def vsh3(m, l, theta, phi):
-    """Calculate a vector spherical harmonics (VSH).
+    """Calculate a vector spherical harmonics 3 (VSH3).
 
-    Parameters:
-        :m,l:               degree and order
-        :theta, phi:     spherical coordinates
+    Parameters
+    ----------
+    m,l: int
+        Degree and order.
+    theta, phi: float
+        Spherical coordinates.
 
-    Returns:
-        :vsh3: ndarray
-        (c_r, c_theta, c_phi)
+    Returns
+    -------
+    vsh3: ndarray
+        Vector spherical harmonics 3.
     """
-
     check_degree_and_order(m, l)
     if l == 0: return np.array((0,0,0))
     alpha = lambda m, l: np.sqrt((l - m) * (l + m + 1)) / 2
@@ -250,28 +246,38 @@ def vsh3_definition(m, l, theta, phi):
 
 
 def vsh1(m, l, theta, phi):
-    """Calculate first of vector spherical harmonics (VSH).
+    """Calculate first of vector spherical harmonics 1 (VSH1).
 
-    Parameters:
-        :m,l:             -   degree and order
-        :theta, phi:   -   spherical coordinates
+    Parameters
+    ----------
+    m,l: int
+        Degree and order.
+    theta, phi: float
+        Spherical coordinates.
 
-    Returns:
-        ndarray (c_r, c_theta, c_phi)
+    Returns
+    -------
+    vsh1: ndarray
+        Vector spherical harmonics 1.
     """
     check_degree_and_order(m, l)
     return np.array((sph_harm(m, l, theta, phi), 0, 0))
 
 
 def vsh2(m, l, theta, phi):
-    """Calculate second of vector spherical harmonics (VSH).
+    """Calculate first of vector spherical harmonics 2 (VSH2).
 
-    Parameters:
-        :m,l:             -   degree and order
-        :theta, phi:   -   spherical coordinates
+    Parameters
+    ----------
+    m,l: int
+        Degree and order.
+    theta, phi: float
+        Spherical coordinates.
 
-    Returns:
-        ndarray (c_r, c_theta, c_phi)
+    Returns
+    -------
+    vsh2: ndarray
+        Vector spherical harmonics 2.
     """
     # r * sph_harm_gradient(m, l, r, theta, phi)
     c_theta = 1/np.sin(phi) * sph_harm_diff_theta(m, l, theta, phi)
