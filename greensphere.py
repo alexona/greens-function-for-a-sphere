@@ -224,26 +224,50 @@ def vsh3(m, l, theta, phi):
     """
     check_degree_and_order(m, l)
     if l == 0: return np.array((0,0,0))
+
     alpha = lambda m, l: np.sqrt((l - m) * (l + m + 1)) / 2
 
-    c_theta = (alpha(-m, l) * np.cos(phi) * np.exp( 1j*theta ) *
-               sph_harm(m-1, l, theta, phi) - m * np.sin(phi) *
-               sph_harm(m, l, theta, phi) + alpha(m, l) * np.cos(phi) *
-               np.exp( -1j*theta ) * sph_harm(m+1, l, theta, phi))
-    c_phi = (alpha(-m, l) * np.exp( 1j*theta ) * sph_harm(m-1, l, theta, phi) -
-             alpha(m, l) * np.exp( -1j*theta ) * sph_harm(m+1, l, theta, phi)
+    c_theta = (alpha(-m, l) * np.cos(theta) * np.exp( 1j*phi ) *
+               sph_harm(m-1, l, theta, phi) - m * np.sin(theta) *
+               sph_harm(m, l, theta, phi) + alpha(m, l) * np.cos(theta) *
+               np.exp( -1j*phi ) * sph_harm(m+1, l, theta, phi)
+               )
+    c_phi = (alpha(-m, l) * np.exp( 1j*phi ) * sph_harm(m-1, l, theta, phi) -
+             alpha(m, l) * np.exp( -1j*phi ) * sph_harm(m+1, l, theta, phi)
              ) * 1j
 
-    return np.array( (0, c_theta, c_phi)) / np.sqrt( l*(l+1) )
+    return np.array((0, c_theta, c_phi)) / np.sqrt( l*(l+1) )
 
 
 def vsh3_definition(m, l, theta, phi):
     """VSH3 from definiotion."""
+    if l==0: return np.array([0, 0, 0])
+
     r = 1
     R = np.array([r, 0, 0])
     gradY = sph_harm_gradient(m, l, r, theta, phi)
     return -1j * np.cross(R, gradY) / np.sqrt( l * (l + 1))
 
+
+def vsh3_rand(dec=10, mneg=False):
+    """Sprawdza rownosc vsh3 i vsh3_definiotion"""
+    l = np.random.randint(1, 10, 1)
+    m = np.random.randint(-l*mneg, l, 1)
+    theta, phi = np.random.random(2)
+    a = np.round(vsh3(m, l, theta, phi), dec)
+    b = np.round(vsh3_definition(m, l, theta, phi), dec)
+    print('params:', m, l, theta, phi)
+    print(a)
+    print(b)
+    return a == b
+
+# =============================================================================
+# for i in range(1000):
+#     arr = vsh3_rand()
+#     if not arr.all():
+#         print('break', i)
+#         break
+# =============================================================================
 
 def vsh1(m, l, theta, phi):
     """Calculate first of vector spherical harmonics 1 (VSH1).
