@@ -47,15 +47,6 @@ class KnownValues(unittest.TestCase):
                     self.assertAlmostEqual(v, r)
 
 
-class CheckFunctionVSH3(unittest.TestCase):
-
-    def vsh3_definition(m, l, theta, phi):
-        r = 1
-        R = np.array([r, 0, 0])
-        gradY = greensphere.sph_harm_gradient(m, l, r, theta, phi)
-        return -1j * np.cross(R, gradY) / np.sqrt( l * (l + 1))
-
-
 class IsItWorking(unittest.TestCase):
 
     l_values = list(range(10))
