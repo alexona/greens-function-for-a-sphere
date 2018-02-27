@@ -23,6 +23,8 @@ spherical_yn
 
 Zostały stworzone funkcje
 -------------------------
+_sph_harm
+    - harmoniki sferyczne z definicji fizycznej (funkcja prywatna dla modulu)
 spherical_hn
     - sferyczna funkcja Hankel'a pierwszego rodzaju
 spherical_gradient
@@ -54,19 +56,21 @@ __email__ = "kubek.monika@wp.pl"
 
 
 import numpy as np
-from scipy.special import spherical_jn, spherical_yn
+from scipy.special import spherical_jn, spherical_yn, sph_harm
 from scipy.constants import speed_of_light
 
 
-def sph_harm(m, n, theta, phi):
-    """Redefine spherical harmonics from scipy.special to match physics convention.
+def _sph_harm(m, n, theta, phi):
+    """
+    Redefine spherical harmonics from scipy.special
+    to match physics convention.
 
     Parameters
     ----------
-    m : array_like
-        Order of the harmonic (int); must have ``|m| <= n``.
-    n : array_like
-       Degree of the harmonic (int); must have ``n >= 0``. This is
+    m : int, array_like
+        Order of the harmonic (int); ``|m| <= n``.
+    n : int, array_like
+       Degree of the harmonic (int); ``n >= 0``. This is
        often denoted by ``l`` (lower case L) in descriptions of
        spherical harmonics.
     theta : array_like
@@ -79,12 +83,12 @@ def sph_harm(m, n, theta, phi):
     y_mn : complex float
        The harmonic :math:`Y^m_n` sampled at ``theta`` and ``phi``.
     """
-    from scipy.special import sph_harm as old_sph_harm
-    return old_sph_harm(m, n, phi, theta)
+    return sph_harm(m, n, phi, theta)
 
 
 def spherical_hn(l, r, derivative=False):
-    """Spherical Hankel function of the First kind or its derivative.
+    """
+    Spherical Hankel function of the First kind or its derivative.
 
     Parameters
     ----------
@@ -100,6 +104,7 @@ def spherical_hn(l, r, derivative=False):
     .. [1]  Weisstein, Eric W. "Spherical Hankel Function of the First Kind."
             From MathWorld--A Wolfram Web Resource.
             http://mathworld.wolfram.com/SphericalHankelFunctionoftheFirstKind.html
+
     .. [2]  NIST
             http://dlmf.nist.gov/10.47
     """
@@ -117,7 +122,8 @@ def spherical_hn(l, r, derivative=False):
 
 
 def spherical_gradient(l, r, sph_func):
-    """Calculate a gradient of a chosen spherical function (_jn, _yn, _hn).
+    """
+    Calculate a gradient of a chosen spherical function (_jn, _yn, _hn).
 
     Parameters
     ----------
@@ -126,7 +132,7 @@ def spherical_gradient(l, r, sph_func):
     r: float
         Is a real, positive variable.
     sph_func: func
-        Spherical function which derivative is calculated.
+        Spherical function which gradient is calculated.
 
     Returns
     -------
@@ -138,7 +144,8 @@ def spherical_gradient(l, r, sph_func):
 
 
 def sph_harm_diff_theta(m, l, theta, phi):
-    """First derivative of spherical harmonics with respect to theta.
+    """
+    First derivative of spherical harmonics with respect to theta.
 
     Parameters
     ----------
@@ -158,13 +165,14 @@ def sph_harm_diff_theta(m, l, theta, phi):
             http://functions.wolfram.com/Polynomials/SphericalHarmonicY/20/01/01/
     """
     check_degree_and_order(m, l)
-    return (m * sph_harm(m, l, theta, phi) / np.tan(theta) +
+    return (m * _sph_harm(m, l, theta, phi) / np.tan(theta) +
             np.sqrt( (l - m) * (l + m + 1) ) * np.exp( -1j*phi ) *
-            sph_harm(m+1, l, theta, phi))
+            _sph_harm(m+1, l, theta, phi))
 
 
 def sph_harm_diff_phi(m, l, theta, phi):
-    """First derivative of spherical harmonics with respect to phi.
+    """
+    First derivative of spherical harmonics with respect to phi.
 
     Parameters
     ----------
@@ -184,15 +192,16 @@ def sph_harm_diff_phi(m, l, theta, phi):
             http://functions.wolfram.com/Polynomials/SphericalHarmonicY/20/01/02/
     """
     check_degree_and_order(m, l)
-    return 1j * m * sph_harm(m, l, theta, phi)
+    return 1j * m * _sph_harm(m, l, theta, phi)
 
 
 def sph_harm_gradient(m, l, r, theta, phi):
-    """Gradient of spherical harmonics.
+    """
+    Gradient of spherical harmonics.
 
     Parameters
     ----------
-    m,l: integer
+    m,l: int
         degree and order
     r, theta, phi: real
         spherical coordinates
@@ -207,8 +216,10 @@ def sph_harm_gradient(m, l, r, theta, phi):
     return np.array((0, c_theta, c_phi))
 
 
-def vsh3(m, l, theta, phi):
-    """Calculate a vector spherical harmonics 3 (VSH3).
+def vsh3_pub(m, l, theta, phi):
+    """
+    Calculate a vector spherical harmonics 3 (VSH3) using the definiotion (39)
+    from Ref. [1].
 
     Parameters
     ----------
@@ -221,6 +232,11 @@ def vsh3(m, l, theta, phi):
     -------
     vsh3: ndarray
         Vector spherical harmonics 3.
+
+    References
+    ---------
+    .. [1]  R. Sainidou, N. Stefanou, A. Modinos, "Green's function formalism
+            for phononic crystals", Physical Review B (2004).
     """
     check_degree_and_order(m, l)
     if l == 0: return np.array((0,0,0))
@@ -228,19 +244,33 @@ def vsh3(m, l, theta, phi):
     alpha = lambda m, l: np.sqrt((l - m) * (l + m + 1)) / 2
 
     c_theta = (alpha(-m, l) * np.cos(theta) * np.exp( 1j*phi ) *
-               sph_harm(m-1, l, theta, phi) - m * np.sin(theta) *
-               sph_harm(m, l, theta, phi) + alpha(m, l) * np.cos(theta) *
-               np.exp( -1j*phi ) * sph_harm(m+1, l, theta, phi)
+               _sph_harm(m-1, l, theta, phi) - m * np.sin(theta) *
+               _sph_harm(m, l, theta, phi) + alpha(m, l) * np.cos(theta) *
+               np.exp( -1j*phi ) * _sph_harm(m+1, l, theta, phi)
                )
-    c_phi = (alpha(-m, l) * np.exp( 1j*phi ) * sph_harm(m-1, l, theta, phi) -
-             alpha(m, l) * np.exp( -1j*phi ) * sph_harm(m+1, l, theta, phi)
+    c_phi = (alpha(-m, l) * np.exp( 1j*phi ) * _sph_harm(m-1, l, theta, phi) -
+             alpha(m, l) * np.exp( -1j*phi ) * _sph_harm(m+1, l, theta, phi)
              ) * 1j
 
     return np.array((0, c_theta, c_phi)) / np.sqrt( l*(l+1) )
 
 
-def vsh3_definition(m, l, theta, phi):
-    """VSH3 from definiotion."""
+def vsh3(m, l, theta, phi):
+    """
+    Calculate third of vector spherical harmonics (VSH3).
+
+    Parameters
+    ----------
+    m,l: int
+        Degree and order.
+    theta, phi: float
+        Spherical coordinates.
+
+    Returns
+    -------
+    vsh1: ndarray
+        Vector spherical harmonics 3.
+    """
     if l==0: return np.array([0, 0, 0])
 
     r = 1
@@ -249,13 +279,15 @@ def vsh3_definition(m, l, theta, phi):
     return -1j * np.cross(R, gradY) / np.sqrt( l * (l + 1))
 
 
-def vsh3_rand(dec=10, mneg=False):
-    """Sprawdza rownosc vsh3 i vsh3_definiotion"""
+def vsh3_test(dec=10, mneg=False):
+    """
+    Sprawdza rownosc vsh3 i vsh3_definiotion
+    """
     l = np.random.randint(1, 10, 1)
     m = np.random.randint(-l*mneg, l, 1)
     theta, phi = np.random.random(2)
-    a = np.round(vsh3(m, l, theta, phi), dec)
-    b = np.round(vsh3_definition(m, l, theta, phi), dec)
+    a = np.round(vsh3_pub(m, l, theta, phi), dec)
+    b = np.round(vsh3(m, l, theta, phi), dec)
     print('params:', m, l, theta, phi)
     print(a)
     print(b)
@@ -270,7 +302,8 @@ def vsh3_rand(dec=10, mneg=False):
 # =============================================================================
 
 def vsh1(m, l, theta, phi):
-    """Calculate first of vector spherical harmonics 1 (VSH1).
+    """
+    Calculate first of vector spherical harmonics (VSH1).
 
     Parameters
     ----------
@@ -285,11 +318,12 @@ def vsh1(m, l, theta, phi):
         Vector spherical harmonics 1.
     """
     check_degree_and_order(m, l)
-    return np.array((sph_harm(m, l, theta, phi), 0, 0))
+    return np.array((_sph_harm(m, l, theta, phi), 0, 0))
 
 
 def vsh2(m, l, theta, phi):
-    """Calculate first of vector spherical harmonics 2 (VSH2).
+    """
+    Calculate second of vector spherical harmonics (VSH2).
 
     Parameters
     ----------
@@ -303,7 +337,6 @@ def vsh2(m, l, theta, phi):
     vsh2: ndarray
         Vector spherical harmonics 2.
     """
-    # r * sph_harm_gradient(m, l, r, theta, phi)
     c_theta = 1/np.sin(phi) * sph_harm_diff_theta(m, l, theta, phi)
     c_phi = sph_harm_diff_phi(m, l, theta, phi)
     return np.array((0, c_theta, c_phi))
@@ -312,8 +345,13 @@ def vsh2(m, l, theta, phi):
 def check_degree_and_order(m, l):
     """
     Check degree and order that function is receiving
-    l - degree
-    m - order
+
+    Parameters
+    ----------
+    l: int
+        degree
+    m: int
+        order
     """
     assert l >= 0 and l%1 == 0, "l is not a natural number"
     assert m%1 == 0, "m is not an intiger"
@@ -326,16 +364,19 @@ Below are definiotions of functions that are elements from T and C matrices.
 zn = omega * S / cn
 xn = omega * S / csn
 """
-d11 = lambda l, zt: zt * spherical_hn(l, zt, derivative=True) \
-                    + spherical_hn(l, zt)
+def d11(l, zt):
+    return zt * spherical_hn(l, zt, derivative=True) + spherical_hn(l, zt)
 
-d21 = lambda l, zt: l * (l + 1) * spherical_hn(l, zt)
+def d21(l, zt):
+    return l * (l + 1) * spherical_hn(l, zt)
 
-d31 = lambda l, zt: (l * (l + 1) - zt**2 / 2 - 1) * spherical_hn(l, zt) \
-                    - zt * spherical_hn(l, zt, derivative=True)
+def d31(l, zt):
+    return ((l * (l + 1) - zt**2 / 2 - 1) * spherical_hn(l, zt)
+            - zt * spherical_hn(l, zt, derivative=True))
 
-d41 = lambda l, zt: l * (l + 1) * (zt * spherical_hn(l, zt, derivative=True) \
-                                   - spherical_hn(l, zt))
+def d41(l, zt):
+    return (l * (l + 1) * (zt * spherical_hn(l, zt, derivative=True)
+            - spherical_hn(l, zt)))
 
 d12 = lambda l, zl: spherical_hn(l, zl)
 
@@ -448,21 +489,32 @@ wL4 = lambda l, zl, zt: (l * (l + 1) - zt**2 / 2) * spherical_hn(l, zl) \
                     - 2 * zl * spherical_hn(l, zl, derivative=True)
 
 def matrix_M1(l, omega, S, cn, csn, rhos, rho):
-    """Creates the M matrix
+    """
+    Creates the M matrix.
 
-    Parameters:
-        l       -   order
-        omega   -   wave anguelar frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
-        csn     -   a dictionary with velocity values inside the sphere
-                    {'l': value, 't': value}
-        rhos    -   sphere density
-        rho     -   host medium density
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
+    csn: dict
+        a dictionary with velocity values inside the sphere
+        ``{'l': value, 't': value}``
+    rhos: float
+        sphere density
+    rho: float
+        host medium density
 
-    Returns:
-        ndarray matrix_M
+    Returns
+    -------
+    M: ndarray
+        the M matrix
     """
     sqrt = np.sqrt(l * (l + 1))
     zl = omega * S / cn['l']
@@ -470,56 +522,80 @@ def matrix_M1(l, omega, S, cn, csn, rhos, rho):
     xl = omega * S / csn['l']
     xt = omega * S / csn['t']
     col1 = np.array((d11(l, zt), d21(l, zt), d31(l, zt), d41(l, zt))) / zt
-    col2 = -sqrt * np.array((d12(l, zl), d22(l, zl), d32(l, zl), d42(l, zl))) / zl
-    col3 = - np.array((d13(l, xt), d23(l, xt),
+    col2 = (-sqrt * np.array((d12(l, zl), d22(l, zl),
+                              d32(l, zl), d42(l, zl))) / zl
+            )
+    col3 = (- np.array((d13(l, xt), d23(l, xt),
                        d33(l, xt, zt, rhos, rho),
                        d43(l, xt, zt, rhos, rho))) / xt
-    col4 = sqrt * np.array((d14(l, xl), d24(l, xl),
+            )
+    col4 = (sqrt * np.array((d14(l, xl), d24(l, xl),
                             d34(l, xl, xt, zt, rhos, rho),
                             d44(l, xl, xt, zt, rhos, rho))) / xl
+            )
     M = np.array((col1, col2, col3, col4))
     return M.T
 
 
 def matrix_N1(l, omega, S, cn):
-    """Creates the N matrix
+    """
+    Creates the N matrix.
 
-    Parameters:
-        l       -   order
-        omega   -   wave angular frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
 
-    Returns:
-        ndarray matrix_N
+    Returns
+    -------
+    N: ndarray
+        the N matrix
     """
     sqrt = np.sqrt(l * (l + 1))
     zl = omega * S / cn['l']
     zt = omega * S / cn['t']
     col1 = - np.array((dN1(l, zt), dN2(l, zt), dN3(l, zt), dN4(l, zt))) / zt
-    col2 = sqrt * np.array((dL1(l, zt), dL2(l, zl),
+    col2 = (sqrt * np.array((dL1(l, zt), dL2(l, zl),
                             dL3(l, zl), dL4(l, zt, zl))) / zl
+            )
     N = np.array((col1, col2))
     return N.T
 
 
 def matrix_K1(l, omega, S, cn, csn, rhos, rho):
-    """Creates the K matrix
+    """
+    Creates the K matrix.
 
-    Parameters:
-        l       -   order
-        omega   -   wave angular frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
-        csn     -   a dictionary with velocity values inside the sphere
-                    {'l': value, 't': value}
-        rhos    -   sphere density
-        rho     -   host medium density
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
+    csn: dict
+        a dictionary with velocity values inside the sphere
+        ``{'l': value, 't': value}``
+    rhos: float
+        sphere density
+    rho: float
+        host medium density
 
-    Returns:
-        ndarray matrix_K
+    Returns
+    -------
+    K: ndarray
+        the K matrix
     """
     zt = omega * S / cn['t']
     xt = omega * S / csn['t']
@@ -529,17 +605,25 @@ def matrix_K1(l, omega, S, cn, csn, rhos, rho):
 
 
 def matrix_L1(l, omega, S, cn):
-    """Creates the L matrix
+    """
+    Creates the L matrix.
 
-    Parameters:
-        l       -   order
-        omega   -   wave angular frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
 
-    Returns:
-        ndarray matrix_L
+    Returns
+    -------
+    L: ndarray
+        the L matrix
     """
     zt = omega * S / cn['t']
     L = np.array((dN2(l, zt), dN4(l, zt)))
@@ -547,80 +631,115 @@ def matrix_L1(l, omega, S, cn):
 
 
 def matrix_M2(l, omega, S, cn, csn, rhos, rho):
-    """Creates the M matrix
+    """
+    Creates the M' matrix.
 
-    Parameters:
-        l       -   order
-        omega   -   wave anguelar frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
-        csn     -   a dictionary with velocity values inside the sphere
-                    {'l': value, 't': value}
-        rhos    -   sphere density
-        rho     -   host medium density
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
+    csn: dict
+        a dictionary with velocity values inside the sphere
+        ``{'l': value, 't': value}``
+    rhos: float
+        sphere density
+    rho: float
+        host medium density
 
-    Returns:
-        ndarray matrix_M
+    Returns
+    -------
+    M': ndarray
+        the M' matrix
     """
     sqrt = np.sqrt(l * (l + 1))
     zt = omega * S / cn['t']
     xl = omega * S / csn['l']
     xt = omega * S / csn['t']
-    col1 = np.array((w11(l, xt), w21(l, xt), w31(l, xt, zt, rhos, rho),
+    col1 = (np.array((w11(l, xt), w21(l, xt), w31(l, xt, zt, rhos, rho),
                      w41(l, xt, zt, rhos, rho))) / xt
-    col2 = -sqrt * np.array((w12(l, xl), w22(l, xl),
+            )
+    col2 = (-sqrt * np.array((w12(l, xl), w22(l, xl),
                              w32(l, xl, xt, zt, rhos, rho),
                              w42(l, xl, zt, zt, rhos, rho))) / xl
-    col3 = - np.array((d13(l, xt), d23(l, xt),
+            )
+    col3 = (- np.array((d13(l, xt), d23(l, xt),
                        d33(l, xt, zt, rhos, rho),
                        d43(l, xt, zt, rhos, rho))) / xt
-    col4 = sqrt * np.array((d14(l, xl), d24(l, xl),
+            )
+    col4 = (sqrt * np.array((d14(l, xl), d24(l, xl),
                             d34(l, xl, xt, zt, rhos, rho),
                             d44(l, xl, xt, zt, rhos, rho))) / xl
+            )
     M = np.array((col1, col2, col3, col4))
     return M.T
 
 
 def matrix_N2(l, omega, S, cn):
-    """Creates the N matrix
+    """
+    Creates the N' matrix.
 
-    Parameters:
-        l       -   order
-        omega   -   wave angular frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
 
-    Returns:
-        ndarray matrix_N
+    Returns
+    -------
+    N': ndarray
+        the N' matrix
     """
     sqrt = np.sqrt(l * (l + 1))
     zl = omega * S / cn['l']
     zt = omega * S / cn['t']
     col1 = - np.array((wN1(l, zt), wN2(l, zt), wN3(l, zt), wN4(l, zt))) / zt
-    col2 = sqrt * np.array((wL1(l, zt), wL2(l, zl),
+    col2 = (sqrt * np.array((wL1(l, zt), wL2(l, zl),
                             wL3(l, zl), wL4(l, zl, zt))) / zl
+            )
     N = np.array((col1, col2))
     return N.T
 
 
 def matrix_K2(l, omega, S, cn, csn, rhos, rho):
-    """Creates the K matrix
+    """
+    Creates the K' matrix.
 
-    Parameters:
-        l       -   order
-        omega   -   wave angular frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
-        csn     -   a dictionary with velocity values inside the sphere
-                    {'l': value, 't': value}
-        rhos    -   sphere density
-        rho     -   host medium density
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
+    csn: dict
+        a dictionary with velocity values inside the sphere
+        ``{'l': value, 't': value}``
+    rhos: float
+        sphere density
+    rho: float
+        host medium density
 
-    Returns:
-        ndarray matrix_K
+    Returns
+    -------
+    K': ndarray
+        the K' matrix
     """
     zt = omega * S / cn['t']
     xt = omega * S / csn['t']
@@ -630,17 +749,25 @@ def matrix_K2(l, omega, S, cn, csn, rhos, rho):
 
 
 def matrix_L2(l, omega, S, cn):
-    """Creates the L matrix
+    """
+    Creates the L' matrix.
 
-    Parameters:
-        l       -   order
-        omega   -   wave angular frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
 
-    Returns:
-        ndarray matrix_L
+    Returns
+    -------
+    L': ndarray
+        the L' matrix
     """
     zt = omega * S / cn['t']
     L = np.array(wN2(l, zt), wN4(l, zt))
@@ -648,26 +775,39 @@ def matrix_L2(l, omega, S, cn):
 
 
 def matrices_TC(l, omega, S, cn, csn, rhos, rho):
-    """Creates the T and C matrices
-
-    Parameters:
-        l       -   order
-        omega   -   wave anguelar frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
-        csn     -   a dictionary with velocity values inside the sphere
-                    {'l': value, 't': value}
-        rhos    -   sphere density
-        rho     -   host medium density
-
-    Returns:
-        tuple of ndarrays (matrix_T, matrix_C)
     """
-    MN = np.linalg.inv(matrix_M1(l, omega, S, cn, csn, rhos, rho))\
-        * matrix_N1(l, omega, S, cn)
-    KL = np.linalg.inv(matrix_K1(l, omega, S, cn, csn, rhos, rho))\
-        * matrix_L1(l, omega, S, cn)
+    Creates the T and C matrices.
+
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
+    csn: dict
+        a dictionary with velocity values inside the sphere
+        ``{'l': value, 't': value}``
+    rhos: float
+        sphere density
+    rho: float
+        host medium density
+
+    Returns
+    -------
+    T, C: (ndarray, ndarray)
+        tuple of ndarrays
+    """
+    MN = (np.linalg.inv(matrix_M1(l, omega, S, cn, csn, rhos, rho))
+          * matrix_N1(l, omega, S, cn)
+          )
+    KL = (np.linalg.inv(matrix_K1(l, omega, S, cn, csn, rhos, rho))
+          * matrix_L1(l, omega, S, cn)
+          )
     T = np.zeros((3,3))
     C = np.zeros((3,3))
     T[:2,:2] = MN[:2]
@@ -678,26 +818,39 @@ def matrices_TC(l, omega, S, cn, csn, rhos, rho):
 
 
 def matrices_QP(l, omega, S, cn, csn, rhos, rho):
-    """Creates the Q and P matrices
-
-    Parameters:
-        l       -   order
-        omega   -   wave anguelar frequency
-        S       -   radius of the sphere
-        cn      -   a dictionary with velocity values outside the sphere
-                    {'l': value, 't': value}
-        csn     -   a dictionary with velocity values inside the sphere
-                    {'l': value, 't': value}
-        rhos    -   sphere density
-        rho     -   host medium density
-
-    Returns:
-        tuple of ndarrays (matrix_Q, matrix_P)
     """
-    MN = np.linalg.inv(matrix_M2(l, omega, S, cn, csn, rhos, rho))\
-        * matrix_N2(l, omega, S, cn)
-    KL = np.linalg.inv(matrix_K2(l, omega, S, cn, csn, rhos, rho))\
-        * matrix_L2(l, omega, S, cn)
+    Creates the Q and P matrices.
+
+    Parameters
+    ----------
+    l: int
+        order
+    omega: float
+        wave anguelar frequency
+    S: float
+        radius of the sphere
+    cn: dict
+        a dictionary with velocity values outside the sphere
+        ``{'l': value, 't': value}``
+    csn: dict
+        a dictionary with velocity values inside the sphere
+        ``{'l': value, 't': value}``
+    rhos: float
+        sphere density
+    rho: float
+        host medium density
+
+    Returns
+    -------
+    Q, P: (ndarray, ndarray)
+        tuple of ndarrays
+    """
+    MN = (np.linalg.inv(matrix_M2(l, omega, S, cn, csn, rhos, rho))
+          * matrix_N2(l, omega, S, cn)
+          )
+    KL = (np.linalg.inv(matrix_K2(l, omega, S, cn, csn, rhos, rho))
+          * matrix_L2(l, omega, S, cn)
+          )
     Q = np.zeros((3,3))
     P = np.zeros((3,3))
     Q[:2,:2] = MN[:2]
@@ -708,7 +861,8 @@ def matrices_QP(l, omega, S, cn, csn, rhos, rho):
 
 
 class Vector3D():
-    """Klasa tworząca wektor o współrzędnych rzeczywistych
+    """
+    Klasa tworząca wektor o współrzędnych rzeczywistych
 
     Argumenty
         :c1, c2, c3:    trzy współrzędne
@@ -821,16 +975,24 @@ class Vector3D():
 
 
 class Wave():
-    """Main class for a wave function.
+    """
+    Main class for a wave function.
 
-    Arguments:
-        :P: - "L" fala podłużna
-            - "M" fala poprzeczna o polaryzacji p
-            - "N" fala poprzeczna o polaryzacji s
-        :m: degree
-        :l: order
-        :omega: frequency
-        :c: velocity
+    Parameters
+    ----------
+    P: str
+        wave type: \n
+        - "L" fala podłużna
+        - "M" fala poprzeczna o polaryzacji p
+        - "N" fala poprzeczna o polaryzacji s
+    m: int
+        degree
+    l: int
+        order
+    omega: float
+        frequency
+    c: float
+        velocity
     """
 
     def __init__(self, P='L', m=0, l=0, omega=1, c=speed_of_light):
@@ -857,33 +1019,47 @@ class Wave():
 #%%
 
 class SphericalWave(Wave):
-    """Main class for a  spherical wave function.
+    """
+    Main class for a  spherical wave function.
 
-    Arguments:
-        :P: - "L" fala podłużna
-            - "M" fala poprzeczna o polaryzacji p
-            - "N" fala poprzeczna o polaryzacji s
-        :m: degree
-        :l: order
-        :omega: frequency
-        :c: velocity
+    Parameters
+    ----------
+    P: str
+        wave type: \n
+        - "L" fala podłużna
+        - "M" fala poprzeczna o polaryzacji p
+        - "N" fala poprzeczna o polaryzacji s
+    m: int
+        degree
+    l: int
+        order
+    omega: float
+        frequency
+    c: float
+        velocity
     """
     def __podluzna(self, sph_func, R):
-        """Compute longitudal spherical eigenfunction"""
+        """
+        Compute longitudal spherical eigenfunction
+        """
         q = self.omega / self.c
         return (spherical_gradient(self.l, q*R.r, sph_func)
-                * sph_harm(self.m, self.l, R.theta, R.phi)
+                * _sph_harm(self.m, self.l, R.theta, R.phi)
                 + sph_func(self.l, q*R.r)
                 * sph_harm_gradient(self.m, self.l, q*R.r, R.theta, R.phi)
                 ) / q
 
     def __poprzeczna_p(self, sph_func, R):
-        """Compute transverse spherical eigenfunction with p-polarization"""
+        """
+        Compute transverse spherical eigenfunction with p-polarization
+        """
         q = self.omega / self.c
         return sph_func(self.l, q*R.r) * vsh3(self.m, self.l, R.theta, R.phi)
 
     def __poprzeczna_s(self, sph_func, R):
-        """Compute transverse spherical eigenfunction with s-polarization"""
+        """
+        Compute transverse spherical eigenfunction with s-polarization
+        """
         q = self.omega / self.c
         r = q * R.r
         a = self.l * ( self.l + 1 )
